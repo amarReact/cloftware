@@ -1,0 +1,19 @@
+.accountCntr{ width: 100%;}
+.accountCntr > h2{ padding-bottom: 20px;}
+.accountCntr h3{ margin: 0 0 20px 0;}
+.manageProfile{ width: 100%; display: flex; align-items: center; justify-content: center; }
+.accountCntr button{ cursor: pointer;}
+
+.accountSettingCntr{ width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.parentList{ width: 170px; border-radius: 8px; padding: 0 0 0px 0; background: #fff; margin: 0 0 25px 0; position: relative;}
+.parentList::after{content: ""; position: absolute; right:49%; bottom: -35px; width: 2px; height: 35px; background: #999;}
+.parentList p{ padding: 0px; min-height: 50px; padding: 10px 0 0 0px;}
+.parentList label{ width: 100%; display: flex; flex-wrap: wrap; align-items: center;}
+.accountSettingCntr hgroup{ width: auto; display: flex; flex-wrap: wrap; position: relative;}
+.accountSettingCntr ul{ width: 100%; display: flex; flex-wrap: wrap; justify-content: center; padding: 20px 0 0 0; }
+.accountSettingCntr hgroup::after{ content: ""; position: absolute; left: 10%; top: 0px; width: 80%; height: 2px; background: #999;}
+.accountSettingCntr ul::after{content: ""; position: absolute; right:10%; top: 0px; width: 2px; height: 10px; background: #999;}
+.accountSettingCntr ul::before{content: ""; position: absolute; left:10%; top: 0px; width: 2px; height: 10px; background: #999;}
+.accountSettingCntr ul li{ width: 140px; border-radius: 8px; overflow: hidden; padding: 0 0 10px 0; background: #fff; margin: 0 20px;}
+.accountSettingCntr ul li label{ width: 100%; padding: 15px; display: flex; flex-wrap: wrap; align-items: center; border-bottom: 1px solid #eee;}
+.accountSettingCntr ul li p{ padding: 0px; text-align: center; font-size: 14px; min-height: 40px; padding: 10px 0 0 0;}

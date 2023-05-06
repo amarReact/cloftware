@@ -1,0 +1,35 @@
+.loginCntr{ width: 100%; display: flex; min-height: 100%; background: #e9e9ea; padding: 30px;}
+.loginCntrIn{width: 100%; display: flex; justify-content: space-between; min-height: 100%; background: #fff; border-radius: 16px; position: relative;}
+.loginCntr aside{ width: 44%; background: #4153ef; padding: 20px 40px; display: flex; align-items: center; flex-wrap: wrap; margin: 1%; border-radius: 8px; }
+.loginCntr aside h2{ font-weight: 400; color: #fff;  padding: 0 0 10px 0;}
+.loginCntr aside h2 span{ display: block;}
+.loginCntr aside p{ color: #fff; font-size: 14px; font-weight: 300;}
+.loginCntr aside main{ background: #fff; border-radius: 8px; padding: 20px; margin-top: 20px;}
+.loginCntr section{ width: 45%; margin-right: 4%; display: flex; align-items: center; position: relative; padding: 60px 0;}
+.loginCntr section ul{ width: 100%;}
+.loginCntr section ul li{ width: 100%; padding: 0 0 26px 0;}
+.loginCntr section ul li label{ width: 100%; padding: 0 0 10px 0; display: block}
+.loginCntr section hgroup{ width: 450px; margin: 0 auto;}
+.loginCntr section hgroup h2{ padding: 0px; }
+.loginCntr section h6{ position: absolute; right: -30px; top: 15px;}
+.loginCntr section h6 img{ }
+.loginCntr section h6 b{ color: #3c3c3c;}
+
+.loginCntr section hgroup h5{ position: absolute; bottom: 15px; left: 0px; right: 0; margin: auto; text-align: center; font-weight: 400; color: #4153ef; font-size: 12px;}
+.loginCntr section hgroup p{ font-size: 14px; font-weight: 300; padding: 0 0 35px 0; position: relative;}
+.loginCntr section hgroup p::after{ content: ""; position: absolute; left: 0px; bottom: 20px; width: 50%; background: #ddd; height: 2px;}
+.loginSelect input{ height: 38px; width: 100%; }
+.loginSelect [class=" css-13cymwt-control"]{ border-radius: 8px;}
+.loginSelect [class=" css-1u9des2-indicatorSeparator"]{ display: none;}
+.loginCntr section ul li .checkbox{ padding: 0px;}
+.loginCntr section ul li .checkbox em{ vertical-align: top;}
+
+.gbtn{ border: 0px; background: none; display: flex; flex-wrap: wrap; align-items: center; font-size: 16px;}
+.gbtn:hover{ text-decoration: none;}
+.gbtn svg{ margin: 0 10px 0 0; font-size: 20px;}
+.forgotPass{ width: 100%; display: flex; flex-wrap: wrap; justify-content: flex-end; background: none; border: 0px; margin: 10px 0 0 0;}
+.forgotPass a{ border: 0px; background: none; color: #4153ef; text-decoration: underline;}
+.forgotPass a:hover{ text-decoration: none;}
+
+
+.forgotPasswordCntr{ width: 100%;}

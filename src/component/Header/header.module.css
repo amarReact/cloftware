@@ -1,0 +1,23 @@
+
+.headerCntr{ width: 100%; background: #38414a; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; height: 65px; padding: 0 20px;}
+.headerCntr aside{ display: flex; position: relative; padding-right: 25px; height: 100%; align-items: center;}
+.headerCntr aside label{ width: 50px; height: 50px; background: #ddd; border-radius: 50px; position: relative; cursor: pointer;}
+.headerCntr aside label b{ display: flex; width: 100%; height: 100%; padding: 10px;}
+.headerCntr aside i{ position: absolute; color: #fff; right: -30px; top: 10px; font-size: 25px;}
+.headerCntr aside ul{ width: 200px; background: #fff; border-radius: 0  0 8px 8px; position: absolute; right: 0px; top:65px; border: 1px solid #eee; box-shadow:0 4px 4px #ddd;}
+.headerCntr aside ul li{ padding: 5px 10px; border-bottom: 1px solid #eee;}
+.headerCntr aside ul li:last-child{ border: 0px;}
+.headerCntr aside ul li a{ color: #3c3c3c; font-size: 14px; position: relative; padding: 0 0 0 25px;}
+.headerCntr aside ul li a:hover{ color: #f1556c;}
+.headerCntr aside ul li a svg{position: absolute; left: 0px; top:0px; bottom: 0px; margin: auto;}
+.headerCntr aside ul li button{ color: #ff5315; font-weight: 700; font-size: 14px; padding: 10px 0; background: none; display: flex; align-items: center; }
+.headerCntr aside ul li button svg{ margin-right: 10px;}
+.headerCntr aside h6{ font-weight: 500; font-size: 14px; color: #fff; margin-right: 15px;}
+.headerCntr cite { font-style: normal;}
+
+.headerCntr aside{ margin-left: auto;}
+
+.menuCntr{ display: flex; align-items: center; margin-right: auto; padding: 0 0 0 20px;}
+.menuCntr li{ margin: 0 10px;}
+.menuCntr li a{ color: #fff;}
+.menuCntr li a:hover{ color: #f1556c;}

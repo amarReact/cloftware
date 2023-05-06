@@ -1,0 +1,52 @@
+.tableDiv{ width: 100%; padding-bottom: 10px; }
+.tableFull{ width: 100%; background: #fff; padding: 20px; border-radius: 8px;}
+.tableBottom{ width: 100%; padding-top: 10px; display: flex; flex-wrap: wrap; justify-content: space-between;}
+.tableBottom section button[disabled]{opacity: 0.5;}
+.tableBottom section button{ background: #5480ED; padding: 6px 12px; border-radius: 4px; font-weight: 700; color: #fff; }
+.tableBottom aside select{ width: 50px; height: 35px; border: 1px solid #ddd; border-radius: 4px; margin:0 0 0 10px }
+
+@media screen and (max-width:540px) {
+.tableBottom, .tableBottom section button{ font-size: 12px;}
+.tableBottom section button{ padding-left: 5px; padding-right: 5px;}
+}
+
+
+.tableFull input,
+.tableFull select {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    padding: 0 20px;
+    height: 40px;
+    width: 50%;
+}
+
+.tableFull table {
+    width: 100%;
+    font-size: 14px;
+    line-height: 16px;
+    padding-top: 0px;
+    border: 1px solid #eee;
+    border-right: 0px;
+    border-bottom: 0px;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.tableFull table th {
+    text-align: left;
+    font-weight: 500;
+    border:0px; border-spacing: 0px; 
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    padding: 10px 10px;
+    background: #f8f8f8;
+    padding: 10px 7px; font-size: 13px;
+}
+
+.tableFull table td {
+    text-align: left;
+    font-weight: 400;
+    border-bottom: 1px solid #eee;
+    border-right: 1px solid #eee;
+    padding: 10px 7px; font-size: 13px;
+}

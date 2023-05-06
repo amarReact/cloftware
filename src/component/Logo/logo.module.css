@@ -1,0 +1,5 @@
+.logoDiv{ display: inline-flex; align-items: center;}
+.logoDiv img{ max-width: 150px;}
+
+.medium img{ max-width: 250px;  }
+.large img{ max-width: 350px;  }

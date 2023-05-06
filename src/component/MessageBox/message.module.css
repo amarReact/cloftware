@@ -1,0 +1,7 @@
+.errorBox{ font-style: normal; display: block; width: 100%; font-size: 13px; line-height: 18px; font-weight: 400; color: #B91C1C; padding: 10px 0 0 0;}
+.successBox{font-style: normal; display: block; width: 100%; font-size: 16px; line-height: 18px;font-weight: 400; color: #22C55E; padding: 10px 0 0 0;}
+
+.errorBox b, .successBox b{ width: 24px; vertical-align: -3px; display: inline-flex; align-items: center; justify-content: center; margin-right: 5px;}
+
+.right{ text-align: right;}
+.center{ text-align: center;}

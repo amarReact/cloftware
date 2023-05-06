@@ -1,0 +1,15 @@
+.footerDiv{ width: 100%; background: #fff; justify-content: space-between; display: flex; flex-wrap: wrap; align-items: center; padding: 15px 20px 15px 20px; margin-top: auto; }
+.footerDiv p{ font-size: 14px; line-height: 18px;  color: #78767A; margin: 0px 20px 0 0; padding: 0px;}
+.footerDiv ol{ display: inline-flex; margin: 0px;}
+.footerDiv ol li{font-size: 14px; line-height: 18px; position: relative; padding: 0 10px;}
+.footerDiv ol li a{ color: #1C1B1F;}
+.footerDiv ol li::after{ content: ""; position: absolute; right: -1px; top:1px; height: 85%; background: #78767A; width: 1px;}
+.footerDiv ol li:last-child:after{ display: none;}
+.footerDiv ul{ display: inline-flex; margin: 0 0 0 auto}
+.footerDiv ul li{ margin-left: 24px;}
+
+
+@media screen and (max-width:768px) {
+    .footerDiv{ padding-left: 15px}
+  
+}

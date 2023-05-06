@@ -1,0 +1,7 @@
+.sdDiv{ width: 100%;}
+.sdDiv ul{ width: 100%; display: flex; flex-wrap: wrap; border-left: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 20px; }
+.sdDiv ul li{ width: 16.66%; border-bottom: 1px solid #ddd; border-right: 1px solid #ddd; padding: 10px;}
+.sdDiv ul li b{ font-size: 14px; font-weight: 600;}
+.sdDiv ul li p{ font-size: 13px; padding: 0px;}
+.sdDiv h4{ font-weight: 600; padding: 50px 0 0 0;}
+.sdDelete{ width: 100%; padding: 20px 0 0px 0; text-align: center; }

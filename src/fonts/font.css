@@ -1,0 +1,471 @@
+
+/*************************************************/
+
+/************************/
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-Bold.woff2") format("woff2"), url("poppins/Poppins-Bold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-ExtraLight.woff2") format("woff2"), url("poppins/Poppins-ExtraLight.woff") format("woff");
+    font-weight: 200;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-Medium.woff2") format("woff2"), url("poppins/Poppins-Medium.woff") format("woff");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-Light.woff2") format("woff2"), url("poppins/Poppins-Light.woff") format("woff");
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-Regular.woff2") format("woff2"), url("poppins/Poppins-Regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-ExtraBold.woff2") format("woff2"), url("poppins/Poppins-ExtraBold.woff") format("woff");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-Thin.woff2") format("woff2"), url("poppins/Poppins-Thin.woff") format("woff");
+    font-weight: 100;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Poppins";
+    src: url("poppins/Poppins-SemiBold.woff2") format("woff2"), url("poppins/Poppins-SemiBold.woff") format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+
+.container,
+.containerXluid,
+.containerXxl,
+.containerXl,
+.containerXg,
+.containerXd,
+.containerXm {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (max-width: 1200px) {
+  .containerXl, .containerXg, .containerXd, .containerXm, .container {
+    padding: 0 0.938rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .containerXl, .containerXg, .containerXd, .containerXm, .container {
+    max-width: 100%; 
+  }
+}
+
+@media (min-width: 1400px) {
+  .containerXxl, .containerXl, .containerXg, .containerXd, .containerXm, .container {
+    max-width: 1200px;
+  }
+}
+
+.gridRow {
+  --bs-gutter-x: 1.5rem;
+  --bs-gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(-1 * var(--bs-gutter-y));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
+}
+.gridRow > * {
+  box-sizing: border-box;
+  flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
+  padding-right: calc(var(--bs-gutter-x) * 0.5);
+  padding-left: calc(var(--bs-gutter-x) * 0.5);
+  margin-top: var(--bs-gutter-y);
+}
+
+.grid {
+  flex: 1 0 0%;
+}
+.gridAuto {
+  flex: 0 0 auto;
+  width: auto;
+}
+.grid_1 {
+  flex: 0 0 auto;
+  width: 8.33333333%;
+}
+.grid_2 {
+  flex: 0 0 auto;
+  width: 16.66666667%;
+}
+.grid_3 {
+  flex: 0 0 auto;
+  width: 25%;
+}
+.grid_4 {
+  flex: 0 0 auto;
+  width: 33.33333333%;
+}
+.grid_5 {
+  flex: 0 0 auto;
+  width: 41.66666667%;
+}
+.grid_6 {
+  flex: 0 0 auto;
+  width: 50%;
+}
+.grid_7 {
+  flex: 0 0 auto;
+  width: 58.33333333%;
+}
+.grid_8 {
+  flex: 0 0 auto;
+  width: 66.66666667%;
+}
+.grid_9 {
+  flex: 0 0 auto;
+  width: 75%;
+}
+.grid_10 {
+  flex: 0 0 auto;
+  width: 83.33333333%;
+}
+.grid_11 {
+  flex: 0 0 auto;
+  width: 91.66666667%;
+}
+.grid_12 {
+  flex: 0 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 576px) {
+  .gridSm {
+    flex: 1 0 0%;
+  }
+  .gridSmAuto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+  .gridSm_1 {
+    flex: 0 0 auto;
+    width: 8.33333333%;
+  }
+  .gridSm_2 {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+  }
+  .gridSm_3 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+  .gridSm_4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+  }
+  .gridSm_5 {
+    flex: 0 0 auto;
+    width: 41.66666667%;
+  }
+  .gridSm_6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .gridSm_7 {
+    flex: 0 0 auto;
+    width: 58.33333333%;
+  }
+  .gridSm_8 {
+    flex: 0 0 auto;
+    width: 66.66666667%;
+  }
+  .gridSm_9 {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+  .gridSm_10 {
+    flex: 0 0 auto;
+    width: 83.33333333%;
+  }
+  .gridSm_11 {
+    flex: 0 0 auto;
+    width: 91.66666667%;
+  }
+  .gridSm_12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .gridMd {
+    flex: 1 0 0%;
+  }
+  .gridMdAuto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+  .gridMd_1 {
+    flex: 0 0 auto;
+    width: 8.33333333%;
+  }
+  .gridMd_2 {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+  }
+  .gridMd_3 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+  .gridMd_4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+  }
+  .gridMd_5 {
+    flex: 0 0 auto;
+    width: 41.66666667%;
+  }
+  .gridMd_6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .gridMd_7 {
+    flex: 0 0 auto;
+    width: 58.33333333%;
+  }
+  .gridMd_8 {
+    flex: 0 0 auto;
+    width: 66.66666667%;
+  }
+  .gridMd_9 {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+  .gridMd_10 {
+    flex: 0 0 auto;
+    width: 83.33333333%;
+  }
+  .gridMd_11 {
+    flex: 0 0 auto;
+    width: 91.66666667%;
+  }
+  .gridMd_12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: 992px) {
+  .gridLg {
+    flex: 1 0 0%;
+  }
+  
+  .gridLgAuto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+  .gridLg_1 {
+    flex: 0 0 auto;
+    width: 8.33333333%;
+  }
+  .gridLg_2 {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+  }
+  .gridLg_3 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+  .gridLg_4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+  }
+  .gridLg_5 {
+    flex: 0 0 auto;
+    width: 41.66666667%;
+  }
+  .gridLg_6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .gridLg_7 {
+    flex: 0 0 auto;
+    width: 58.33333333%;
+  }
+  .gridLg_8 {
+    flex: 0 0 auto;
+    width: 66.66666667%;
+  }
+  .gridLg_9 {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+  .gridLg_10 {
+    flex: 0 0 auto;
+    width: 83.33333333%;
+  }
+  .gridLg_11 {
+    flex: 0 0 auto;
+    width: 91.66666667%;
+  }
+  .gridLg_12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .gridXl {
+    flex: 1 0 0%;
+  }
+  .gridXlAuto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+  .gridXl_1 {
+    flex: 0 0 auto;
+    width: 8.33333333%;
+  }
+  .gridXl_2 {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+  }
+  .gridXl_3 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+  .gridXl_4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+  }
+  .gridXl_5 {
+    flex: 0 0 auto;
+    width: 41.66666667%;
+  }
+  .gridXl_6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .gridXl_7 {
+    flex: 0 0 auto;
+    width: 58.33333333%;
+  }
+  .gridXl_8 {
+    flex: 0 0 auto;
+    width: 66.66666667%;
+  }
+  .gridXl_9 {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+  .gridXl_10 {
+    flex: 0 0 auto;
+    width: 83.33333333%;
+  }
+  .gridXl_11 {
+    flex: 0 0 auto;
+    width: 91.66666667%;
+  }
+  .gridXl_12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
+
+@media (min-width: 1400px) {
+  .gridXxl {
+    flex: 1 0 0%;
+  }
+  .gridXxlAuto {
+    flex: 0 0 auto;
+    width: auto;
+  }
+  .gridXxl_1 {
+    flex: 0 0 auto;
+    width: 8.33333333%;
+  }
+  .gridXxl_2 {
+    flex: 0 0 auto;
+    width: 16.66666667%;
+  }
+  .gridXxl_3 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+  .gridXxl_4 {
+    flex: 0 0 auto;
+    width: 33.33333333%;
+  }
+  .gridXxl_5 {
+    flex: 0 0 auto;
+    width: 41.66666667%;
+  }
+  .gridXxl_6 {
+    flex: 0 0 auto;
+    width: 50%;
+  }
+  .gridXxl_7 {
+    flex: 0 0 auto;
+    width: 58.33333333%;
+  }
+  .gridXxl_8 {
+    flex: 0 0 auto;
+    width: 66.66666667%;
+  }
+  .gridXxl_9 {
+    flex: 0 0 auto;
+    width: 75%;
+  }
+  .gridXxl_10 {
+    flex: 0 0 auto;
+    width: 83.33333333%;
+  }
+  .gridXxl_11 {
+    flex: 0 0 auto;
+    width: 91.66666667%;
+  }
+  .gridXxl_12 {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  
+}
