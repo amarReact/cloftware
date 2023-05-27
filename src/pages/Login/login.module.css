@@ -1,10 +1,10 @@
 .loginCntr{ width: 100%; display: flex; min-height: 100%; background: #e9e9ea; padding: 30px;}
 .loginCntrIn{width: 100%; display: flex; justify-content: space-between; min-height: 100%; background: #fff; border-radius: 16px; position: relative;}
-.loginCntr aside{ width: 44%; background: #4153ef; padding: 20px 40px; display: flex; align-items: center; flex-wrap: wrap; margin: 1%; border-radius: 8px; }
+.loginCntr aside{ width: 44%; background: #6b58d3; padding: 20px 40px; display: flex; align-items: center; flex-wrap: wrap; margin: 1%; border-radius: 8px; }
 .loginCntr aside h2{ font-weight: 400; color: #fff;  padding: 0 0 10px 0;}
 .loginCntr aside h2 span{ display: block;}
 .loginCntr aside p{ color: #fff; font-size: 14px; font-weight: 300;}
-.loginCntr aside main{ background: #fff; border-radius: 8px; padding: 20px; margin-top: 20px;}
+.loginCntr aside main{ background: #fff; border-radius: 6px; padding: 20px; margin-top: 20px;}
 .loginCntr section{ width: 45%; margin-right: 4%; display: flex; align-items: center; position: relative; padding: 60px 0;}
 .loginCntr section ul{ width: 100%;}
 .loginCntr section ul li{ width: 100%; padding: 0 0 26px 0;}
@@ -19,7 +19,7 @@
 .loginCntr section hgroup p{ font-size: 14px; font-weight: 300; padding: 0 0 35px 0; position: relative;}
 .loginCntr section hgroup p::after{ content: ""; position: absolute; left: 0px; bottom: 20px; width: 50%; background: #ddd; height: 2px;}
 .loginSelect input{ height: 38px; width: 100%; }
-.loginSelect [class=" css-13cymwt-control"]{ border-radius: 8px;}
+.loginSelect [class=" css-13cymwt-control"]{ border-radius: 6px;}
 .loginSelect [class=" css-1u9des2-indicatorSeparator"]{ display: none;}
 .loginCntr section ul li .checkbox{ padding: 0px;}
 .loginCntr section ul li .checkbox em{ vertical-align: top;}

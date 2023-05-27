@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
 import styles from "./sd.module.css"
 import axios from "axios";
-
+import { BASE_URL } from "../../redux/constants/constants";
+import {BsPlusLg} from "react-icons/bs"
+import {CgClose} from "react-icons/cg"
 const SchoolDeatil =({scId})=>{
     const [schoolDetailData, setSchoolDetailData] = useState([])
-
+    const [isOpen, setIsOpen] = useState(0)
 
     const schoolDetailFunc = async () => {
         try {
-        const response = await axios.post(`https://aa8b-203-212-233-211.ngrok-free.app/api/get_school_details`, {
+        const response = await axios.post(`${BASE_URL}/get_school_details`, {
           school_id: scId
         });
-        console.log("response3", response?.data)
             setSchoolDetailData(response?.data);
         } catch (error) {
           console.log(error);
         }
+      }
+
+      const accordianHandler=(id)=>{
+        if(id === isOpen){
+           return setIsOpen(null)
+        } 
+        setIsOpen(id)
       }
 
       useEffect(()=>{
@@ -25,8 +33,10 @@ const SchoolDeatil =({scId})=>{
     return(
         <div className={styles.sdDiv}>
             {schoolDetailData &&
-            <>
-             <ul>
+               <div className={styles.sdDivIn}>
+             <aside>
+            <h4 onClick={()=> accordianHandler(0)}>{isOpen === 0 ? <CgClose /> : <BsPlusLg />} School Information</h4>
+            {isOpen === 0 && <ul>
                  <li><b>School Name</b> <p>{schoolDetailData?.body?.school_name}</p></li>
                  <li><b>School Address</b> <p>{schoolDetailData?.body?.school_address}</p></li>
                  <li><b>School City</b> <p>{schoolDetailData?.body?.school_city}</p></li>
@@ -50,9 +60,12 @@ const SchoolDeatil =({scId})=>{
                  <li><b>Authorized Designation</b> <p>{schoolDetailData?.body?.authorized_signatory_designation}</p></li>
                  <li><b>Authorized Email</b> <p>{schoolDetailData?.body?.authorized_signatory_email_id}</p></li>
                  <li><b>Authorized Name</b> <p>{schoolDetailData?.body?.authorized_signatory_name}</p></li>
-            </ul>
-            <h4>Other Details</h4>
-            <ul>
+            </ul>}
+            </aside>
+
+            <aside>
+            <h4 onClick={()=> accordianHandler(1)}>{isOpen === 1 ? <CgClose /> : <BsPlusLg />} Other Details</h4>
+            {isOpen === 1 && <ul>
                 <li><b>SCL ID </b> <p>{schoolDetailData?.body?.other_details?.scl_details_id}</p></li>
                 <li><b>School ID </b> <p>{schoolDetailData?.body?.other_details?.school_id}</p></li>
                 <li><b>School PAN Number</b> <p>{schoolDetailData?.body?.other_details?.school_pan_number}</p></li>
@@ -61,10 +74,12 @@ const SchoolDeatil =({scId})=>{
                 <li><b>School TAN Name</b> <p>{schoolDetailData?.body?.other_details?.school_tan_name}</p></li>
                 <li><b>School GST Number</b> <p>{schoolDetailData?.body?.other_details?.school_gst_number}</p></li>
                 <li><b>School GST Number</b> <p>{schoolDetailData?.body?.other_details?.school_gst_number}</p></li>
-            </ul>
+            </ul>}
+            </aside>
 
-            <h4>Commercial Details</h4>
-            <ul>
+            <aside>
+            <h4 onClick={()=> accordianHandler(2)}>{isOpen === 2 ? <CgClose /> : <BsPlusLg />} Commercial Details</h4>
+            {isOpen === 2 && <ul>
                 <li><b>Bank Name</b> <p>{schoolDetailData?.body?.commercial_details?.scl_details_id}</p></li>
                 <li><b>Bank Name</b> <p>{schoolDetailData?.body?.commercial_details?.bank_name}</p></li>
                 <li><b>Billing Start Date</b> <p>{schoolDetailData?.body?.commercial_details?.billing_start_date}</p></li>
@@ -86,10 +101,13 @@ const SchoolDeatil =({scId})=>{
                 <li><b>Updated At</b> <p>{schoolDetailData?.body?.commercial_details?.updated_at ? schoolDetailData?.body?.commercial_details?.updated_at : "NA"}</p></li>
                 <li><b>Updated By</b> <p>{schoolDetailData?.body?.commercial_details?.updated_by ? schoolDetailData?.body?.commercial_details?.updated_by : "NA"}</p></li>
                 <li><b>Updated By</b> <p>{schoolDetailData?.body?.commercial_details?.updated_by ? schoolDetailData?.body?.commercial_details?.updated_by : "NA"}</p></li>
-            </ul>
+            </ul>}
+            </aside>
 
-            <h4>Platform Licence Detail</h4>
-            <ul>
+            <aside>
+            <h4 onClick={()=> accordianHandler(3)}>{isOpen === 3 ? <CgClose /> : <BsPlusLg />} Platform Licence Detail</h4>
+            {isOpen === 3 && <ul>
+
                 <li><b>SCL ID </b> <p>{schoolDetailData?.body?.platform_licence_detail?.scl_platform_lic_id}</p></li>
                 <li><b>Licence Number </b> <p>{schoolDetailData?.body?.platform_licence_detail?.licence_number}</p></li>
                 <li><b>Licence To</b> <p>{schoolDetailData?.body?.platform_licence_detail?.licence_to}</p></li>
@@ -99,8 +117,9 @@ const SchoolDeatil =({scId})=>{
                 <li><b>Termination Period</b> <p>{schoolDetailData?.body?.platform_licence_detail?.termination_period}</p></li>
                 <li><b>Licence Status</b> <p>{schoolDetailData?.body?.platform_licence_detail?.licence_status}</p></li>
                 <li><b>Licence Status</b> <p>{schoolDetailData?.body?.platform_licence_detail?.licence_status}</p></li>
-            </ul>
-            </>
+            </ul>}
+            </aside>
+            </div>
             }
             
         </div>

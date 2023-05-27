@@ -3,15 +3,14 @@ import styles from "./sd.module.css"
 import axios from "axios";
 import ButtonGlobal from "../../component/ButtonGlobal";
 import { ToastContainer, toast } from 'react-toastify';
+import { BASE_URL } from "../../redux/constants/constants";
 
 const SchoolDelete =({scId, setIsDelete})=>{
     const [schoolDeleteData, setSchoolDeleteData] = useState([])
 
-    console.log("scId", scId)
-
     const schoolDetailFunc = async () => {
         try {
-        const response = await axios.put(`https://aa8b-203-212-233-211.ngrok-free.app/api/change_school_status`, {
+        const response = await axios.put(`${BASE_URL}/change_school_status`, {
           school_id: scId,
           school_status: "Delete"
         });

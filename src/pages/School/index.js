@@ -11,7 +11,7 @@ import ModalGlobal from "../../component/ModalGlobal";
 import SchoolDelete from "../../pageComponent/schoolDash/SchoolDelete";
 import { useNavigate } from "react-router-dom";
 import EditSchool from "../../pageComponent/schoolDash/EditSchool";
-
+import { BASE_URL } from "../../redux/constants/constants";
 
 const SchoolList = () => {
   const [isEdit, setIsEdit] = useState(false)
@@ -25,7 +25,7 @@ const SchoolList = () => {
 
   const schoolListFunc = async () => {
     try {
-    const response = await axios.post(`https://aa8b-203-212-233-211.ngrok-free.app/api/get_school_list`, {
+    const response = await axios.post(`${BASE_URL}/get_school_list`, {
       offset,
       limit,
     });
@@ -116,7 +116,7 @@ const SchoolList = () => {
 
   return (
     <div className={styles.sListCntr}>
-        <section className={styles.headingTop}>
+        <section className="headingTop">
           <h3>School Management</h3>
           <ButtonGlobal onClick={()=> navigate("/add-school")} size="small" className={styles.addSchool} bgColor="green" width="auto" title="Add School"><AiOutlinePlusCircle /></ButtonGlobal>
         </section>
@@ -124,7 +124,7 @@ const SchoolList = () => {
         {data2 && <Table placeholder="Search here..." data={data2} columns={columns} />}
 
         {isEdit && 
-        <ModalGlobal heading="School Detail" outSideClick={false} onClose={setIsEdit} activeState={isEdit} width="full">
+        <ModalGlobal heading="School Edit" outSideClick={false} onClose={setIsEdit} activeState={isEdit} width="extraLarge">
             <EditSchool scId={schoolId} setIsEdit={setIsEdit}  />
         </ModalGlobal>}
 

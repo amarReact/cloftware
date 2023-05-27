@@ -1,7 +1,7 @@
 import React,{useEffect} from "react";
 import styles from "./buttonGlobal.module.css"
 import classnames from 'classnames';
-const ButtonGlobal = ({title="Text Hera", width="full", size="medium", bgColor="", className="", disable=false, onClick, children, icon={}}) => {
+const ButtonGlobal = ({title="Text Hera", width="full", radius="full", size="medium", bgColor="", className="", disable=false, onClick, children, icon={}}) => {
 
     return (
         <div  
@@ -11,6 +11,7 @@ const ButtonGlobal = ({title="Text Hera", width="full", size="medium", bgColor="
             [styles[width]]: width,
             [styles.disableClass] : disable,
             [styles[size]]: size,
+            [styles[radius]]: radius,
             [styles[bgColor]]: bgColor,
             [styles[icon?.align === "right" ? icon?.align : "left"]]: icon && icon?.src,
           })} 
@@ -32,4 +33,5 @@ export default ButtonGlobal;
 // size = varients small, mediun (bydefault) and large 
 // bgColor = (bydefault is blue) add property green, gray, border and red
 // icon = have tow property icon={ src: "", align: bydefault is left || right }  Example icon={{src:lcIcon, align: "left"}}
+//border-radius have three option bydefault full medium 8px and none 0px
 

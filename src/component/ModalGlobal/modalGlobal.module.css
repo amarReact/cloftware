@@ -8,7 +8,7 @@
     top: 0px;
     z-index: 10;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     overflow: auto;
@@ -31,10 +31,14 @@
     .modalGlobalContent {
             width: 100%;
             background: #fff;
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 40px;
             position: relative;
         }
+    .modalGlobalContent h2{ font-weight: 400; }
+    .modalGlobalContent h2 em{ display: flex; height: 6px; background: #483567; border-radius: 8px; width: 100%; margin-top: 10px; overflow: hidden;}
+    .modalGlobalContent h2 em i{ width: 33.33%; background: #46B7AE;}
+    .modalGlobalContent h2 em b{ width: 33.33%; background: #E58F97;}
 
 .mgClose{
     border: 0px;

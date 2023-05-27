@@ -3,7 +3,6 @@ import styles from "./message.module.css"
 import classnames from 'classnames';
 
 export const SuccessBox=({title, align= "left", className="", icon})=>{
-  console.log("icon", icon)
     return(
         <>
         {title && <h6 

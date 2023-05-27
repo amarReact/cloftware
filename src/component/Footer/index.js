@@ -1,6 +1,7 @@
 
 import styles from "./footer.module.css";
 import { Link } from "react-router-dom";
+import BackToTop from "../BackToTop";
 
 export const Footer =(props)=>{
     return(
@@ -14,6 +15,7 @@ export const Footer =(props)=>{
             <li><Link legacyBehavior href="#"><a target="_blank"><Image src={linkdin} alt="" /></a></Link></li>
             <li><Link legacyBehavior href="#"><a target="_blank"><Image src={facebook} alt="" /></a></Link></li>
         </ul> */}
+        <BackToTop />
      </div>
     )
 }

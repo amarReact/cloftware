@@ -10,7 +10,7 @@
 .border button{ background: none; color: rgb(63, 44, 232); border: 1px solid #3D2AE7;}
 .white button{ background: #fff; color: #3D2AE7;}
 .red button{ background: #f44336; color: #fff;}
-
+.medium button{ border-radius: 8px;}
 .right button{ flex-direction: row-reverse; display: flex; flex-wrap: wrap; align-items: center;justify-content: space-between;}
 .right button span{ display: inline-block; padding-right: 20px; position: relative;}
 .right button b{ max-width: 16px; width: 100%; max-height: 16px; margin-left: 8px;}

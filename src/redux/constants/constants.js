@@ -1,5 +1,8 @@
 
-export const BASE_URL =  process.env.REACT_APP_BASE_URL
+export const BASE_URL = "https://307d-203-212-233-211.ngrok-free.app/api"
+export const BASE_URL_SCHOOL = BASE_URL + "/school"
+// process.env.REACT_APP_BASE_URL
+
 
 
 // export const USER_LOGIN_URL = '/auth';

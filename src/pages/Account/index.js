@@ -3,7 +3,6 @@ import ButtonGlobal from "../../component/ButtonGlobal";
 import InputFields from "../../component/inputFields/InputFields";
 import Select from "react-select";
 import { Logo } from "../../component/Logo";
-import { CheckBoxGlobal } from "../../component/checkboxGlobal/CheckBoxGlobal";
 import { useState } from "react";
 import {WhiteBox} from "../../component/WhiteBox"
 // import sch from "../../../public/images/parents.png"

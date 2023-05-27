@@ -9,6 +9,8 @@ import { SuccessBox } from "../../component/MessageBox/SuccessBox"
 import { ToastContainer, toast } from 'react-toastify';
 import moment from "moment";
 import classnames from 'classnames';
+import { BASE_URL } from "../../redux/constants/constants";
+import Select from "react-select";
 
 import axios from "axios";
 const EditSchool = ({scId, setIsEdit, className}) =>{
@@ -29,7 +31,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
   const schoolDetailFunc = async () => {
     try {
-    const response = await axios.post(`https://aa8b-203-212-233-211.ngrok-free.app/api/get_school_details`, {
+    const response = await axios.post(`${BASE_URL}/get_school_details`, {
       school_id: scId
     });
     setFormData({...formData, 
@@ -65,17 +67,17 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
       bankName: response?.data?.body?.commercial_details?.bank_name,
       monthlySubscriptionFee: response?.data?.body?.commercial_details?.monthly_subscription_fee,
       quarterlyPayment: response?.data?.body?.commercial_details?.quarterly_payment,
-      quarterlyPayment: response?.data?.body?.commercial_details?.payment_status,
+      // quarterlyPayment: response?.data?.body?.commercial_details?.payment_status,
       password: response?.data?.body?.password || "test",
       teacherAccounts: response?.data?.body?.platform_licence_detail?.num_teachers,
       studentAccounts: response?.data?.body?.platform_licence_detail?.num_student,
       terminationPeriod: response?.data?.body?.platform_licence_detail?.termination_period,
     }) 
 
-    setSelectBoard(response?.data?.body?.curriculum_board)
-    setSelectGrade(response?.data?.body?.platform_licence_detail?.grade)
-    setSelectPayment(response?.data?.body?.commercial_details?.payment_mode)
-    setSelectPymentStatus(response?.data?.body?.commercial_details?.payment_status)
+    setSelectBoard({value : response?.data?.body?.curriculum_board, label: response?.data?.body?.curriculum_board})
+    setSelectGrade({value: response?.data?.body?.platform_licence_detail?.grade, label: response?.data?.body?.platform_licence_detail?.grade})
+    setSelectPayment({value: response?.data?.body?.commercial_details?.payment_mode, label: response?.data?.body?.commercial_details?.payment_mode})
+    setSelectPymentStatus({value: response?.data?.body?.commercial_details?.payment_status, label: response?.data?.body?.commercial_details?.payment_status})
     setPoDate(new Date(response?.data?.body?.commercial_details?.po_date))
     setDepositDate(new Date(response?.data?.body?.commercial_details?.deposit_date))
     setProposedDate(new Date(response?.data?.body?.commercial_details?.proposed_deployment_date))
@@ -140,9 +142,11 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
       const handleSubmit = (event) => {
         event.preventDefault();
         const validationErrors = validate(formData);
+        console.log("validationErrors", validationErrors)
         if (Object.keys(validationErrors).length === 0) {
              schoolPostFunc()
         } else {
+          toast.error("Please fill in the required field!", {position: "top-center"})
           setErrors(validationErrors);
         }
       };
@@ -245,9 +249,9 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         return errors;
       };
 
-      const changeBaordHandler =(event)=>{
-        setSelectBoard(event.target.value);
-      }
+      // const changeBaordHandler =(event)=>{
+      //   setSelectBoard(event.target.value);
+      // }
 
       const boardOptions = [
         { value: "CBSE", label: "CBSE" },
@@ -258,9 +262,9 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
       ];
 
 
-    const paymentHandler =(event)=>{
-      setSelectPayment(event.target.value)
-    } 
+    // const paymentHandler =(event)=>{
+    //   setSelectPayment(event.target.value)
+    // } 
       const paymentOptions = [
         { value: "Cash", label: "Cash" },
         { value: "Cheque", label: "Cheque" },
@@ -269,18 +273,18 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         { value: "RTGS", label: "RTGS" },
       ]
 
-      const paymentStatusHandler =(event)=>{
-        setSelectPymentStatus(event.target.value);
+      // const paymentStatusHandler =(event)=>{
+      //   setSelectPymentStatus(event.target.value);
         
-      } 
+      // } 
       const paymentStatusOptions = [
         { value: "Paid", label: "Paid" },
         { value: "Pending", label: "Pending" },
       ]
 
-      const gradeHandler=(event)=>{
-        setSelectGrade(event.target.value);
-      }
+      // const gradeHandler=(event)=>{
+      //   setSelectGrade(event.target.value);
+      // }
 
       const gradeOptions = [
         { value: "1", label: "1" },
@@ -348,12 +352,12 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
           principal_email_id: formData?.principaleMailID,
 
 
-          payment_mode: selectPyment,
-          payment_status: selectPymentStatus,
+          payment_mode: selectPyment?.value,
+          payment_status: selectPymentStatus?.value,
           licence_status: "active",
-          curriculum_board: selectBoard,
-          school_board: selectBoard,
-          grade: selectGrade,
+          curriculum_board: selectBoard?.value,
+          school_board: selectBoard?.value,
+          grade: selectGrade?.value,
           termination_period: formData?.terminationPeriod,
           licence_number:"8521496ut",
           licence_from: formatDate(startDate),
@@ -367,7 +371,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         }
     
         axios
-          .post("https://aa8b-203-212-233-211.ngrok-free.app/api/add_edit_school", schoolList)
+          .post(`${BASE_URL}/add_edit_school`, schoolList)
           .then((response) => {
             if(response?.status === 400){
               toast.error(response?.data?.message);
@@ -624,13 +628,19 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
        <ul className={styles.formFields}>
        <li className={styles.threeIn }>
         <label>Board Details *</label>
-       <select className="selectnBoxCustom" value={selectBoard} onChange={changeBaordHandler}>
+       {/* <select className="selectnBoxCustom" value={selectBoard} onChange={changeBaordHandler}>
         {boardOptions.map((item, ind)=>{
           return(
             <option key={item?.value} value={item?.value}>{item?.value}</option>
           )
         })}
-      </select>
+      </select> */}
+      <Select 
+        value={selectBoard} 
+        options={boardOptions} 
+        onChange={option => setSelectBoard(option)}
+        // onChange={changeTitleMrHandler} 
+        className="loginSelectGlb" />
       {errors?.boardDetails && <ErrorBox title={errors?.boardDetails} />}
         </li>
 
@@ -741,13 +751,20 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
         <li className={styles.threeIn }>
         <label>Grade *</label>
-         <select className="selectnBoxCustom" value={selectGrade} onChange={gradeHandler}>
+         {/* <select className="selectnBoxCustom" value={selectGrade} onChange={gradeHandler}>
         {gradeOptions.map((item, ind)=>{
           return(
             <option key={item?.value} value={item?.value}>{item?.value}</option>
           )
         })}
-      </select>
+      </select> */}
+       <Select 
+        value={selectGrade} 
+        options={gradeOptions} 
+        onChange={option => setSelectGrade(option)}
+        // onChange={changeTitleMrHandler} 
+        className="loginSelectGlb" />
+
       {errors?.grade && <ErrorBox title={errors?.grade} />}
         </li>
 
@@ -821,13 +838,20 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
         <li className={styles.threeIn }>
         <label>Paymont Mode </label>
-        <select className="selectnBoxCustom" value={selectGrade} onChange={paymentHandler}>
+        <Select 
+        value={selectPyment} 
+        options={paymentOptions} 
+        onChange={option => setSelectPayment(option)}
+        // onChange={changeTitleMrHandler} 
+        className="loginSelectGlb" />
+        {/* <select className="selectnBoxCustom" value={selectGrade} onChange={paymentHandler}>
         {paymentOptions.map((item, ind)=>{
           return(
             <option key={item?.value} value={item?.value}>{item?.value}</option>
           )
         })}
-      </select>
+      </select> */}
+
         </li>
 
         <li className={styles.threeIn }>
@@ -896,13 +920,19 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <li className={styles.threeIn }>
         <label>Payment Status </label>
         {/* <Select options={paymentStatusOptions} onChange={paymentStatusHandler} className="loginSelectGlb" /> */}
-        <select className="selectnBoxCustom" value={selectGrade} onChange={paymentStatusHandler}>
+        {/* <select className="selectnBoxCustom" value={selectGrade} onChange={paymentStatusHandler}>
         {paymentStatusOptions.map((item, ind)=>{
           return(
             <option key={item?.value} value={item?.value}>{item?.value}</option>
           )
         })}
-      </select>
+      </select> */}
+      <Select 
+        value={selectPymentStatus} 
+        options={paymentStatusOptions} 
+        onChange={option => setSelectPymentStatus(option)}
+        // onChange={changeTitleMrHandler} 
+        className="loginSelectGlb" />
         </li>
 
        </ul>

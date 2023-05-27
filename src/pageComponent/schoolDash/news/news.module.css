@@ -1,0 +1,58 @@
+
+.newsProfileSt{ width: 100%; padding: 25px 20px 0 0;}
+.newsTop{ width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 0 20px 0;}
+.newsTop h3{ padding: 0px;}
+.newsDvBox{ width: 100%; padding: 0px 0 30px 0;}
+.newsDv{ position: relative; width: 100%; display: flex; margin: 0px 0 5px 0;}
+.newsDv aside{ display: flex; width: 100%; padding: 15px 15px 15px 15px;}
+/* .newsDv::before{ content: ""; position: absolute; right:0px; left: 0px; margin: 0 auto; top: 0px; height: 3px; width: 80%; background: #159895;} */
+/* .newsDv::after{ content: ""; position: absolute; right:0px; top: 0px; height: 50px; width: 3px; background: #159895;} */
+.newsDv label{ width: 240px; height: 130px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #f8f8f8; margin: 0 15px 0 0; position: relative; border-radius: 2px 25px 2px 25px;}
+.newsDv label img{ width: 100%; max-width: initial; height: 100%; position:absolute; left: 0px; top:0px; bottom: 0px; right: 0px; margin: auto; object-fit: cover;}
+.newsDv hgroup{ width: 100%; padding: 10px 0px 0 0;}
+.newsDv h4{ padding: 0 130px 10px 0; font-size: 16px; display: flex; flex-wrap: wrap; justify-content: space-between; position: relative;color: #6b58d3;  font-weight: 500;}
+.newsDv h4 span{ position: absolute; right: 0px; top: 6px; display: flex;}
+.newsDv h4 button{ background: none; color: #6b58d3; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 0 0 15px; font-weight: 400;}
+.newsDv h5{ font-weight: 400; font-size: 11px; display: flex; width: 100%;}
+.newsDv h5 span{ display: flex; align-items:center; margin: 0 15px 15px 0px; }
+.newsDv h5 span:nth-child(2){ color: #e35959;}
+.newsDv h5 span svg{ font-size: 14px; margin-right: 10px;}
+.newsDv p{ font-size: 14px;}
+.newsDv h4 .deleteNews{ color: #f1556c;}
+.newsDv h4 button svg{ margin-right: 5px;}
+
+.newsSections{ width: 100%; background: #b5c5ef; border-radius: 6px 6px 0 0; box-shadow: 0 0 6px #ddd; padding: 15px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;}
+
+.newsSections form{ width: 300px;}
+
+.newsProfiForm{ width: 100%;}
+.newsProfiForm ol{ width: 100%; padding-top: 30px;}
+.newsProfiForm ol li{ width: 100%; padding: 0 0 20px 0;}
+.newsProfiForm ol li aside{ width: 100%; padding: 20px 0 0 0;}
+.newsProfiForm ol li aside button{ border-color: #ddd; color: #3c3c3c; font-weight: 400; margin-right: 10px; 
+    margin-bottom: 10px; position: relative;}
+.newsProfiForm ol li aside button b {
+        position: absolute;
+        right: -10px;
+        top: -6px;
+        font-weight: 400;
+        border: 1px solid #ddd;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        font-size: 9px;
+    }
+    .newsProfiForm ol li label{
+        font-size: 14px;
+        width: 100%;
+        text-align: left;     padding: 0 0 10px 0;
+        display: flex;
+        color: #5F5E62;
+    }
+.nsDelete{ width: 100%; padding: 20px 0 0px 0; text-align: center; }
+
+.importRight{ margin-left: auto;}

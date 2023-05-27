@@ -1,8 +1,9 @@
 .layoutCntr{ width: 100%; min-height: 100vh; display: flex; flex-direction: column; background: #dee2e6;}
-.layoutCntrCenter{ width: 100%; flex:1; display: flex; flex-wrap: wrap; justify-content: space-between; padding: 0px 0px 0px 0px;}
-.layoutCntrAll{ width: 100%; display: flex; flex-wrap: wrap; flex-direction: column;}
+.layoutCntrCenter{ width: 100%; flex:1; display: flex; flex-wrap: wrap; justify-content: space-between; padding: 0px 0px 0px 0px; position: relative;}
+/* .layoutCntrCenter::after{ width: 230px; background: #fff; height: 50%; content: ""; position: absolute; left: 0px; bottom:0px}
+.layoutCntrAll{ width: 100%; display: flex; flex-wrap: wrap; flex-direction: column;} */
 
-.leftSidebar{ width: 230px; height: clac(100vh - 65px); background: #fff; }
+.leftSidebar{ width: 230px; background: #fff; margin-top: 66px; }
 
 .rightCover{ width: calc(100% - 245px); display: flex; flex-wrap: wrap; flex-direction: column; align-items: flex-start;}
 .leftSidebar aside {
@@ -10,11 +11,17 @@
     height: 68px;
     display: flex;
 }
-.leftSidebar nav{ width: 100%; padding: 0 0 0 25px;}
-.leftSidebar nav ul{ width: 100%;}
-.leftSidebar nav ul li{ width: 100%; padding: 0 0 10px 0;}
-.leftSidebar nav ul li b{ position: absolute; left: 0px; bottom: 0px; top:0px; margin-top: auto; width: 30px; display: flex; align-items: center; justify-content: center;}
-.leftSidebar nav ul li a{ width: 100%; display: block; position:relative; padding: 4px 0 4px 30px; color: #3c3c3c; font-size: 12px; line-height: 15px}
+.leftSidebar nav{ width: 100%; padding: 0 0 0 0px;}
+.leftSidebar nav ul{ width: 100%;border-top: 1px solid #ddd;}
+.leftSidebar nav ul li{ width: 100%; padding: 0 0 0px 0; border-bottom: 1px solid #ddd;}
+.leftSidebar nav ul li b{ position: absolute; left: 3px; bottom: 0px; top:0px; margin-top: auto; width: 30px; display: flex; align-items: center; justify-content: center; font-size: 16px;}
+.leftSidebar nav ul li a{ width: 100%; display: block; position:relative; padding: 14px 0 14px 35px; color: #3c3c3c; font-size: 12px; line-height: 15px}
+.leftSidebar nav ul li a:hover{ background: #6b58d3; color: #fff;}
+.leftSidebar nav ul li a.active{ background: #6b58d3; color: #fff;}
+.leftSidebar nav ul li a i{ position: absolute; right: 5px; top: 11px; font-size: 20px;}
+.leftSidebar .ifAuth{ padding: 0px; justify-content: center;}
+.leftSidebar nav ul ul li a{ padding-left: 48px;}
+.leftSidebar nav ul ul li a b{ left: 20px;}
 
 @media screen and (max-width:768px) {
     .layoutCntrCenter{ padding-left: 0px; padding-right: 0px; border-radius: 0px;}

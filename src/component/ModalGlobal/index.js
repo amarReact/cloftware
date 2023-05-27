@@ -61,7 +61,7 @@ const ModalGlobal = ({ children, onClose, activeState, outSideClick = true, hide
             
                   })}
                 >
-                       {heading && <h2>{heading}</h2>}
+                       {heading && <h2>{heading} <em><i></i><b></b></em></h2>}
                         {!hideCloseButton &&
                             <button className={styles.mgClose} onClick={()=> onClose()}>
                                 <IoIosCloseCircle />

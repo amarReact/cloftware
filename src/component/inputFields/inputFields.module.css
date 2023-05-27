@@ -26,24 +26,24 @@
     font-size: 16px;
     padding: 12px 16px;
     color: #313034;
-    border-radius: 8px; resize: none;
+    border-radius: 6px; resize: none;
 }
 
 .inputFieldsFull input{
 
         width: 100%;
-        height: 48px;
+        height: 44px;
         background: #fff;
         border: 1px solid #E5E1E6;
         font-size: 16px;
         padding: 12px 16px;
         color: #313034;
-        border-radius: 8px;
+        border-radius: 6px;
     
 }
 
 .inputFieldsFull label {
-    font-size: 16px;
+    font-size: 14px;
     width: 100%;
     text-align: left;
     color: #5F5E62;
@@ -89,6 +89,9 @@
         border-color: #4B3DF3;
     
 }
+
+.inputFieldsFull artical{ width: 100%; position:relative; display: block}
+.inputFieldsFull artical em{ width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; position: absolute; right: 0px; top:3px; cursor: pointer;}
 
 /* .inputFieldsFull {
     input[type="date"] {

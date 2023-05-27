@@ -3,103 +3,171 @@ import ButtonGlobal from "../../component/ButtonGlobal";
 import InputFields from "../../component/inputFields/InputFields";
 import Select from "react-select";
 import { Logo } from "../../component/Logo";
-import { CheckBoxGlobal } from "../../component/checkboxGlobal/CheckBoxGlobal";
+import { CheckBoxGlobal } from "../../component/CheckBoxGlobal";
 import { useEffect, useState } from "react";
-import {AiFillGoogleCircle} from "react-icons/ai"
+import { AiFillGoogleCircle } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { ErrorBox } from "../../component/MessageBox/ErrorBox";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../../redux/constants/constants";
+import { BASE_URL, BASE_URL_SCHOOL } from "../../redux/constants/constants";
+import { ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
-  const [selectSchool, setSelectSchool] = useState("")
-  const [selectBoxSelect, setSelectBoxSelect] = useState(false)
+  const formList = {
+    email: "",
+    password: "",
+  };
+
+  const [selectSchool, setSelectSchool] = useState("");
+  const [selectBoxSelect, setSelectBoxSelect] = useState(false);
+  const [getSchoolCode, setGetSchoolCode] = useState({});
+  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
 
   const apiUrl = process.env.REACT_APP_API_URL;
 
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [nameError, setNameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const [formData, setFormData] = useState(formList);
+  const [errors, setErrors] = useState({});
 
-  const options = [
-    { value: "DAV public school", label: "DAV public school" },
-    {
-      value: "Dayananda Saraswati Public School",
-      label: "Dayananda Saraswati Public School",
-    },
-    {
-      value: "Vidya Bharti mandir school 222",
-      label: "Vidya Bharti mandir school 222",
-    },
-    {
-      value: "1111",
-      label: "111",
-    },
-    {
-      value: "ram Bharti mandir school delhi",
-      label: "ram Bharti mandir school delhi",
-    },
-  ];
-
-  /*********select box function  start*******/
-  const changeHandler=(val)=>{
-    setSelectSchool(val.value)
-  }
-
-  const continueHandler =()=>{
-    setSelectBoxSelect(true)
-  }
-    /*********select box function  end*******/
-
-      /*********login function  start*******/
-  const loginPostFunc = async () => {
-    const userLogin = {
-      "email": name,
-      "password": password,
-      "school_id":2
-    }
-
-    axios
-      .post("https://aa8b-203-212-233-211.ngrok-free.app/api/login", userLogin)
-      .then((response) => {
-        const token = response?.data?.body?.token;
-        localStorage.setItem("user", JSON.stringify(response?.data?.body));
-        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        if(token){
-          navigate("/dashboard");
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      });
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (name && password) {
-      loginPostFunc()
+
+    const validationErrors = validate(formData);
+    if (Object.keys(validationErrors).length === 0) {
+      loginPostFunc();
     } else {
-      if (!name) {
-        setNameError("Name cannot be empty");
-      }
-      if (!password) {
-        setPasswordError("Password cannot be empty");
-      }
+      toast.error("Please fill in the required field!", {
+        position: "top-center",
+      });
+      setErrors(validationErrors);
     }
   };
-      /*********login function  end*******/
 
-        /*********if useer login start*******/
-        useEffect(()=>{
-          const auth = localStorage.getItem("user")
-          if(auth){
-              navigate("/dashboard")
-          }
-        },[])
-        /*********if useer login start  end*******/
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
+
+  /*********select box function  start*******/
+  const changeHandler = (val) => {
+    const vdata = val.value.split(":")[1].trim();
+    setSelectSchool(vdata);
+  };
+
+  const continueHandler = () => {
+    setSelectBoxSelect(true);
+  };
+  /*********select box function  end*******/
+
+  /*********select box function  start*******/
+  const schoolSelectFunc = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL_SCHOOL}/get_school_name_code`
+      );
+      setGetSchoolCode(response?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const options =
+    getSchoolCode &&
+    getSchoolCode?.body?.map((item, ind) => {
+      return {
+        label: `${item?.school_name_code} : ${item?.scl_id}`,
+        value: `${item?.school_name_code} : ${item?.scl_id}`,
+      };
+    });
+  /*********select box function  end*******/
+
+  /*******user rolebase start********/
+  const userRole = 2;
+  const userRoleBaseFunc = () => {
+    switch (userRole) {
+      case 1:
+        return navigate("/super-admin-dashboard");
+      case 2:
+        return navigate("/school-dashboard");
+      case 3:
+        return navigate("/teacher-dashboard");
+      case 4:
+        return navigate("/student-dashboard");
+      default:
+        return null;
+    }
+  };
+  /******user role base end******/
+
+  /*********login function  start*******/
+
+  const loginPostFunc = async () => {
+    const userLogin = {
+      email: formData?.email,
+      password: formData?.password,
+      school_id: parseInt(selectSchool),
+    };
+
+    try {
+      const response = await axios.post(`${BASE_URL}/login`, userLogin);
+      const responseData = response.data;
+
+      console.log("response", response)
+
+      if (responseData.success) {
+        const token = responseData?.body?.token;
+        localStorage.setItem("user", JSON.stringify(responseData?.body));
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        toast.success(responseData?.message, { position: "top-center" });
+        let timer = setTimeout(() => {
+          userRoleBaseFunc();
+          clearTimeout(timer);
+        }, 3000);
+      } else {
+        const errorCode = responseData.code;
+        const errorMessage = responseData.message;
+        toast.error(responseData?.message, { position: "top-center" });
+      }
+    } catch (error) {
+      toast.error(error?.message, { position: "top-center" });
+      console.log(error);
+    }
+  };
+
+  const validate = (values) => {
+    const errors = {};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
+    if (!values.email) {
+      errors.email = "Email is required!";
+    } else if (!regex.test(values.email)) {
+      errors.email = "This is not a valid email format!";
+    }
+    if (!values.password) {
+      errors.password = "Password is required";
+    } else if (values.password.length < 3) {
+      errors.password = "Password must be more than 3 characters";
+    }
+    return errors;
+  };
+  /*********login function  end*******/
+
+  useEffect(() => {
+    schoolSelectFunc();
+  }, []);
+
+  /*********if useer login start*******/
+  useEffect(() => {
+    const auth = localStorage.getItem("user");
+    if (auth) {
+      navigate("/dashboard");
+    }
+  }, []);
+  /*********if useer login start  end*******/
 
   return (
     <div className={styles.loginCntr}>
@@ -120,54 +188,73 @@ const Login = () => {
             <Logo />
           </h6>
           <hgroup>
-            <h2>Welcome ASA solutions</h2>
+            <h2>Welcome Cloftware solutions</h2>
             <p>Enter your credentials to access your account</p>
 
-            {!selectBoxSelect ? 
-            <ul>
-            <li>
-                <label>Select your school</label>
-                <Select options={options} onChange={changeHandler} className={styles.loginSelect} />
-              </li>
-              <li>
-                <button className={styles.gbtn}><AiFillGoogleCircle /> Sign in With Google</button>
-              </li>
-         
-              <li>
-                <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="I Agree to the terms & Condition"
-                />
-              </li>
-              <li>
-                <ButtonGlobal title="Continue" disable={selectSchool ? false : true} onClick={continueHandler} />
-              </li>
-            </ul>
-            :
+            {!selectBoxSelect ? (
               <ul>
-              <li>
-  
-            <InputFields value={name}  onChange={(event) => {
-            setName(event.target.value);
-            setNameError("");
-          }}
-           label="Username" />
-           {nameError && <ErrorBox title={nameError} ></ErrorBox>}
-          </li>
-          <li>
-            <InputFields value={password} 
-            onChange={(event) => {
-            setPassword(event.target.value);
-            setPasswordError("");
-          }} type="password" label="Password" />
-            <button className={styles.forgotPass}><Link to="/forgot-password">Forgotten password?</Link></button>
-            {passwordError && <ErrorBox title={passwordError} ></ErrorBox>}
-          </li>
-          <li>
-                <ButtonGlobal title="Submit" onClick={handleSubmit} />
-              </li>
-              </ul>          
-             }
+                {options && (
+                  <li>
+                    <label>Select your school</label>
+                    <Select
+                      options={options}
+                      onChange={changeHandler}
+                      className={styles.loginSelect}
+                    />
+                  </li>
+                )}
+                <li>
+                  <button className={styles.gbtn}>
+                    <AiFillGoogleCircle /> Sign in With Google
+                  </button>
+                </li>
+
+                <li>
+                  <CheckBoxGlobal
+                    className={styles.checkbox}
+                    title="I Agree to the terms & Condition"
+                    checked={isChecked}
+                    onChange={handleCheckboxChange}
+                  />
+                </li>
+                <li>
+                  <ButtonGlobal
+                    title="Continue"
+                    disable={selectSchool && isChecked ? false : true}
+                    onClick={continueHandler}
+                  />
+                </li>
+              </ul>
+            ) : (
+              <ul>
+                <li>
+                  <InputFields
+                    value={formData.email}
+                    onChange={handleChange}
+                    name="email"
+                    label="Email"
+                  />
+                  {errors?.email && <ErrorBox title={errors?.email} />}
+                </li>
+                <li>
+                  <InputFields
+                    eye={true}
+                    value={formData.password}
+                    onChange={handleChange}
+                    name="password"
+                    label="Password"
+                  />
+                  <button className={styles.forgotPass}>
+                    <Link to="/forgot-password">Forgotten password?</Link>
+                  </button>
+                  {errors?.password && <ErrorBox title={errors?.password} />}
+                </li>
+                <li>
+                  <ButtonGlobal title="Submit" onClick={handleSubmit} />
+                  <ToastContainer />
+                </li>
+              </ul>
+            )}
             <h5>&copy; 2023 CloftWare.com, All right Reserved</h5>
           </hgroup>
         </section>
@@ -178,14 +265,12 @@ const Login = () => {
 
 export default Login;
 
-
-
-// > Login Screen 
+// > Login Screen
 // School name   >  after school selection username and password will be visible.
-// Username 
+// Username
 // Password
 
-// Change password 
+// Change password
 // Forgot password
-// Profile 
+// Profile
 // SignOut

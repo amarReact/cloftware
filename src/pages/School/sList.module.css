@@ -1,7 +1,7 @@
-.sListCntr{ width: 100%; padding: 25px 0 0 0; flex: 1; display: flex; flex-direction: column; }
+.sListCntr{ width: 100%; padding: 20px 20px 0 0; flex: 1; display: flex; flex-direction: column; }
 .sListCntr [attr="tables"]{ flex: 1; margin-bottom: 20px;}
-.editList svg{ font-size: 25px;  cursor: pointer; }
-.editList{ width: 100%; display: flex; justify-content: space-between;}
+.editList svg{ font-size: 25px;  cursor: pointer; margin: 0 3px; }
+.editList{ width: 100%; display: flex; justify-content: center;}
 .editList svg:hover{ color: #FF5316;}
 
 .Inactive{ background: #5480ED; padding: 5px 10px; border-radius: 20px; font-size: 10px; color: #fff}
@@ -10,7 +10,9 @@
 .addSchool{ width: auto;}
 .addSchool button{ align-items: center; display: flex; padding: 0 20px;}
 .addSchool svg{ font-size: 20px; margin: 0 0 0 5px;}
-.headingTop{ width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 0 20px 0;}
-.headingTop h3{ padding: 0px;}
+
 
 .disabled{ opacity: 0.1; pointer-events: none;}
+
+.btnBord button{ border-color: #ddd; margin-right: 10px;}
+.importRight{ margin-left: auto; margin-right: 10px;}

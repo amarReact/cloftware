@@ -1,4 +1,4 @@
-.dashbaordCntr{ width: 100%;}
+.dashbaordCntr{ width: 100%; padding-right: 15px; padding-top: 20px;}
 .dashbaordCntr > h2{ padding-bottom: 20px;}
 /* .dashbaordCntrIn{ width: 100%; background: #fff; border-radius: 8px; padding: 20px;} */
 .one{ width: 8.;}

@@ -1,10 +1,28 @@
-.purchaseCntr{ width: 100%; margin: 0px; height: 100vh; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; border-radius: 8px; overflow: auto;}
+.purchaseCntr{ width: 100%; margin: 0px; height: 100vh; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; border-radius: 8px; overflow: auto; padding: 0 15px 0 0;}
 .purchaseCntr > h2{ padding-bottom: 20px; color: #fff; padding-top: 30px; }
-.purchaseCntr h3{ margin: 0 0 20px 0;}
+.purchaseCntr h3{ margin: 0 0 5px 0;}
 .purchaseCntr button{ cursor: pointer;}
 
+.sdSections h3 em {
+    display: flex;
+    height: 6px;
+    background: #483567;
+    border-radius: 8px;
+    width: 100%;
+    margin-top: 10px;
+    overflow: hidden;
+}
+.sdSections h3 em i {
+    width: 33.33%;
+    background: #46B7AE;
+}
+.sdSections h3 em b {
+    width: 33.33%;
+    background: #E58F97;
+}
+
 .purSelect input{ height: 38px; width: 100%; }
-.purSelect [class=" css-13cymwt-control"]{ border-radius: 8px;}
+.purSelect [class=" css-13cymwt-control"]{ border-radius: 6px;}
 .purSelect [class=" css-1u9des2-indicatorSeparator"]{ display: none;}
 
 .formFields{ width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between;}
@@ -13,7 +31,14 @@
 .formFields li.threeIn{ width: 31%;}
 .formFields li.twoIn{ width: 49%;}
 
-.allForm{ width: 100%; margin: 10px auto; background: #fff; padding: 20px 0px 50px 0px; border-radius: 8px; }
+.formFields li .checkBoxCustome{ width: 100%; display: flex; padding-top: 9px; padding-bottom: 10px; min-height: 47px;}
+.formFields li .checkBoxCustome button{ display: flex; background: none; align-items: center; margin: 0 15px 0 0; text-transform: capitalize; }
+.formFields li .checkBoxCustome button span{ width: 20px; height: 20px; display: flex; background: #5480ED; margin: 0 5px 0 0; border-radius: 4px;}
+.formFields li .checkBoxCustome label{ margin-right: 25px; padding-top: 10px; padding-bottom: 5px;}
+.formFields li .checkBoxCustome label em{ font-size: 14px; }
+.formFields li .checkBoxCustome button.activated span{ background: #FF5316;}
+
+.allForm{ width: 100%; margin: 10px auto; background: #fff; padding: 10px 0px 0px 0px; border-radius: 6px; }
 
 .allForm ol { width: 100%; display: flex; justify-content: center; padding: 20px 0 30px 0;}
 .allForm ol li{ background: #ddd; color: #333; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 20px; position: relative;}
@@ -21,12 +46,53 @@
 .allForm ol li.visited{ background: green; color: #fff;}
 .allForm ol li::after{ content: ""; position: absolute; left: -100%; width: 100%; height: 2px; background: #333;}
 .allForm ol li:first-child::after{ display: none;}
-.allForm h3{  font-weight: 600; text-transform: uppercase; font-size: 22px; padding-top: 30px;}
+.allForm h3{  font-weight: 500; text-transform: uppercase; font-size: 22px; padding-top: 30px;}
 .allForm section{ width: 100%; padding: 0 20px 20px 20px; border-bottom: 10px solid #dee2e6;}
 .allForm section:last-child{ border-bottom: 0px;}
-.nxtBtn button{ padding: 0 25px; margin-left: 10px;}
+.nxtBtn button{ padding: 0 25px; margin-left: 0px;}
 .nxtBtnss{ width: 100%; display: flex; align-items: center; justify-content: flex-end;}
 
 .textareaManage textarea{ height: 90px;}
 
 .purchaseCntrEdit section{ padding-left: 0px; padding-right: 0px;}
+
+
+/*****schDeshbaord start*****/
+.schDeshbaord{ width: 100%;}
+.myProfileSt{ width: 100%; padding: 25px 20px 0 0;}
+.myProfileSt h2{}
+.mpSections{ width: 100%; background: #fff; border-radius: 6px; box-shadow: 0 0 6px #ddd; padding: 15px; display: flex; flex-wrap: wrap; align-items: flex-start;}
+.mpSections label{ width: 90px; height: 90px; background: #f8f8f8; border-radius: 8px; overflow: hidden; display: inline-flex; margin: 0 20px 0 0;}
+.mpSections label svg{ font-size: 80px;}
+.mpSections h4{ font-weight: 600;width: 100%;}
+.mpSections h4 span{ display: block; font-weight: 300; font-size: 14px;}
+.mpSections aside{ flex: 1; padding-top: 10px; display: flex; flex-wrap: wrap; justify-content: space-between;}
+.mpSections h5{ font-weight: 400; width: 100%;}
+.mpSectionsBot{ width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; margin-top: 20px; }
+.mpSectionsBot h4{ font-size: 16px; font-weight: 500; padding: 0 0 25px 0;}
+.pdStr ul{ width: 100%; border-radius: 6px; padding: 10px; border: 1px solid #eee; }
+.pdStr ul li{ border-bottom:1px solid #eee; padding: 10px; font-size: 14px; display: flex; flex-wrap: wrap;}
+.pdStr ul li span{ width: 120px; color: #999;}
+.pdStr ul li:last-child{ padding-bottom: 0px; border: 0px;}
+.pdStr ul li b{ font-weight: 400; width: calc(100% - 120px);}
+.cpStr ol{ width: 100%;}
+.cpStr ol li{ width: 100%; padding: 0 0 10px 0;}
+/*********schDeshbaord ends***********/
+
+/*****schDeshbaord start*****/
+.twists{ border-top: 15px solid #e35959; position: relative;}
+.twists::before{ content: ""; position: absolute; right:0px; top: -15px; height: 15px; width: 80%; background: #F6CBCB;}
+.twists h4{ color: #e35959;}
+.twists h4 span{ background: #E35959; border-radius: 50%; width: 25px; height: 25px; display: inline-flex; align-items: center; justify-content: center; color: #fff; margin: 0 5px 0 0;}
+.twists aside{ width: 100%; padding: 10px 15px;}
+.twistsTw{ border-color: #8294C4;}
+.twistsTw::before{ background: #b5c5ef;}
+.twistsTw h4 span{ background: #8294C4;}
+.twistsTw h4{ color: #8294C4;}
+.twistsThr{ border-color: #A2A378;}
+.twistsThr::before{ background: #d9eccd;}
+.twistsThr h4 span{ background: #A2A378;}
+.twistsThr h4{ color: #A2A378;}
+/*****schDeshbaord end*****/
+
+/*****ClassManagement end*****/

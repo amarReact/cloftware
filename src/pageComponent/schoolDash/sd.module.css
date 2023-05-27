@@ -1,7 +1,14 @@
 .sdDiv{ width: 100%;}
-.sdDiv ul{ width: 100%; display: flex; flex-wrap: wrap; border-left: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 20px; }
+.sdDivIn{ padding: 0px; width: 100%; min-height: 500px;}
+.sdDiv ul{ width: calc(100% - 40px); margin: auto; display: flex; flex-wrap: wrap; border-left: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 20px; margin-bottom: 20px; }
 .sdDiv ul li{ width: 16.66%; border-bottom: 1px solid #ddd; border-right: 1px solid #ddd; padding: 10px;}
-.sdDiv ul li b{ font-size: 14px; font-weight: 600;}
-.sdDiv ul li p{ font-size: 13px; padding: 0px;}
-.sdDiv h4{ font-weight: 600; padding: 50px 0 0 0;}
+.sdDiv ul li b{ font-size: 14px; font-weight: 500;}
+.sdDiv ul li p{ font-size: 13px; padding: 0px; word-wrap:break-word;}
+.sdDiv aside h4{ font-weight: 500; padding: 15px 0 15px 40px; position: relative; cursor: pointer; }
+.sdDiv aside h4 svg{ position: absolute; left: 10px; top: 19px;}
+.sdDiv aside{ display: flex; flex-direction: column; width: 100%; margin-top: 8px; background: #FFF7ED; border-left: 4px solid #F7C392; border-radius: 4px;}
+.sdDiv aside:first-child{ margin-top: 20px;}
+.sdDiv aside:nth-child(2){ background: rgb(241,240,254); border-color: rgb(140,141,233);}
+.sdDiv aside:nth-child(3){ background: #FEF0F2; border-color: rgb(240,161,183);}
+.sdDiv aside:nth-child(4){ background: rgb(238,248,255); border-color: rgb(147,212,246);}
 .sdDelete{ width: 100%; padding: 20px 0 0px 0; text-align: center; }

@@ -9,6 +9,7 @@ import { ErrorBox } from "../../component/MessageBox/ErrorBox";
 import moment from "moment";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { BASE_URL } from "../../redux/constants/constants";
 
 import axios from "axios";
 const AddSchool = () =>{
@@ -87,6 +88,7 @@ const AddSchool = () =>{
         if (Object.keys(validationErrors).length === 0) {
              schoolPostFunc()
         } else {
+          toast.error("Please fill in the required field!", {position: "top-center"})
           setErrors(validationErrors);
         }
       };
@@ -310,13 +312,13 @@ const AddSchool = () =>{
         }
     
         axios
-          .post("https://aa8b-203-212-233-211.ngrok-free.app/api/add_edit_school", schoolList)
+          .post(`${BASE_URL}/add_edit_school`, schoolList)
           .then((response) => {
             if(response?.status === 400){
               toast.error(response?.data?.message);
             } else{
+              toast.success(response?.data?.message, {position: "bottom-center"});
               let timer = setTimeout(()=>{
-                toast.success(response?.data?.message, {position: "bottom-center"});
                  navigate("/school");
                 clearTimeout(timer)
               },3000)
@@ -330,8 +332,8 @@ const AddSchool = () =>{
     return(
       <div className={styles.purchaseCntr}>
       <div className={styles.allForm}>
-        <section>
-        <h3>School Details</h3>
+      <section className={styles.sdSections}>
+        <h3>Add School  <em><i></i><b></b></em></h3>
         <ul className={styles.formFields}>
 
         <li className={styles.threeIn}>

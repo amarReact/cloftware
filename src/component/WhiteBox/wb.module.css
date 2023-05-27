@@ -1,3 +1,6 @@
-.wbBox{ width: 100%; background: #fff; border-radius: 8px; padding: 20px 20px 20px 20px; box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1); margin: 5px 0 25px 0;}
+.wbBox{ width: 100%; background: #fff; border-radius: 6px; padding: 20px 20px 20px 20px; box-shadow: 0 0 6px #ddd; margin: 5px 0 25px 0;}
 .wbBox hgroup{ width: 100%;}
-/* .wbBox.half{ width: 48%;} */
+.wbBox.half{ width: 49%;}
+.wbBox.quarter{ width: 32%;}
+.wbBox.none{ border-radius: 0px;}
+.wbBox.paddnone{ padding: 0px;}

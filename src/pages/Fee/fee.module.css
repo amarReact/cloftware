@@ -1,0 +1,12 @@
+
+.feeProfileSt{ width: 100%; padding: 25px 20px 0 0;}
+.feeProfileSt form{ width: 100%; padding: 20px 20px;}
+.feeForm{ width: 100%; margin: auto; display: flex; flex-wrap: wrap;}
+.feeForm li { width: 48%;padding: 0 0 20px 0; margin-right: 4%; }
+.feeForm li label {
+    font-size: 14px;
+    width: 100%;
+    text-align: left;padding: 0 0 10px 0; display: flex;
+    color: #5F5E62;
+}
+.feeForm li:nth-child(2n){ margin-right: 0px;}

@@ -16,14 +16,21 @@ body{ color: #3c3c3c;
 }
 
 h1{ font-size: 26px; line-height: 30px;  font-weight: 400;}
-h2{ font-size: 26px; line-height: 30px;  font-weight: 500;}
-h3{ font-size: 22px; line-height: 26px;  font-weight: 600; padding: 0 0 20px 0;}
+h2{ font-size: 24px; line-height: 30px;  font-weight: 500;}
+h3{ font-size: 20px; line-height: 26px;  font-weight: 600; padding: 0 0 20px 0;}
 h4{ font-size: 15px; line-height: 22px;  font-weight: 400;}
 
 
-.loginSelectGlb input{ height: 35px; width: 100%; }
-.loginSelectGlb [class=" css-13cymwt-control"]{ border-radius: 8px;}
+.loginSelectGlb input{ height: 30px; width: 100%; }
+.loginSelectGlb [class=" css-13cymwt-control"]{ border-radius: 6px;}
 .loginSelectGlb [class=" css-1u9des2-indicatorSeparator"]{ display: none;}
+
+.loginSelectGlb .css-1jw2kmg-MenuList > div{ display: flex; align-items: center; justify-content: flex-start; border-bottom: 1px solid #ddd;}
+.loginSelectGlb .css-1jw2kmg-MenuList > div [type="checkbox"]{ height: 20px; width: 20px; margin: 0 15px 0 0;}
+.loginSelectGlb .css-3w2yfm-ValueContainer .css-1p3m7a8-multiValue{ background: #6b58d3;}
+.loginSelectGlb .css-3w2yfm-ValueContainer .css-1p3m7a8-multiValue label{ font-size: 20px; color: #fff;}
+.loginSelectGlb .css-3w2yfm-ValueContainer .css-1p3m7a8-multiValue svg{ color: #fff;}
+.loginSelectGlb .css-wsp0cs-MultiValueGeneric [type="checkbox"]{ width: 15px; height: 15px; margin-right: 5px; display: none;}
 
 .datePicker{ width: 100%; height: 48px; background: #fff; border: 1px solid #E5E1E6; font-size: 16px; padding: 12px 16px; color: #313034; border-radius: 8px; }
 .globaltable{ width: 100%; overflow: auto;}
@@ -36,11 +43,33 @@ h4{ font-size: 15px; line-height: 22px;  font-weight: 400;}
   font-size: 16px;
   padding: 12px 16px;
   color: #313034;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .selectnBoxCustom option {
   font-size: 16px;
   background-color: #fff;
   color: #444;
+}
+
+.headingTop{ width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 10px 0 20px 0;}
+.headingTop h3{ padding: 0px;}
+
+.globalInputs{
+  width: 100%;
+  height: 44px;
+  background: #fff;
+  border: 1px solid #E5E1E6;
+  font-size: 16px;
+  padding: 12px 16px;
+  color: #313034;
+  border-radius: 6px;
+}
+.globalInputs::placeholder{
+    
+  color: #C9C5CA;
+
+  opacity: 1;
+
+
 }

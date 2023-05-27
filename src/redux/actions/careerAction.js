@@ -175,7 +175,7 @@ const getUserDiagnosticResultAction = (userSid="") => async (dispatch) => {
                 type: GET_USER_DIAGNOSTIC_RESULT_ERROR,
                 payload: res.data,
             });
-            console.log("error", res.data);
+
         }
 
     } catch (error) {
@@ -330,7 +330,6 @@ const getImmersiveCareerAction = (data) => (dispatch) => {
                 type: GET_IMMERSIVE_CAREER_ERROR,
                 payload: error.message,
             });
-            console.log("getImmersiveCareersAction", error);
             return error
         });
 };
@@ -359,7 +358,6 @@ const getEmergingCareerAction = (data) => (dispatch) => {
                 type: GET_EMERGING_CAREER_ERROR,
                 payload: error.message,
             });
-            console.log("getEmergingCareersAction", error);
             return error
         });
 };
