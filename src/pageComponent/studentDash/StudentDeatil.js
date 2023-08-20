@@ -4,7 +4,10 @@ import axios from "axios";
 import { BASE_URL } from "../../redux/constants/constants";
 import {BsPlusLg} from "react-icons/bs"
 import {CgClose} from "react-icons/cg"
+import Cookies from 'js-cookie';
+
 const StudentDeatil =({scId})=>{
+  const token = Cookies.get('jwtToken');
     const [studentDetailData, setStudentDetailData] = useState([])
     const [isOpen, setIsOpen] = useState(0)
 
@@ -12,7 +15,13 @@ const StudentDeatil =({scId})=>{
         try {
         const response = await axios.post(`${BASE_URL}/student/get_student_details`, {
           student_id: scId
-        });
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        }
+        );
             setStudentDetailData(response?.data);
         } catch (error) {
           console.log(error);
@@ -41,6 +50,7 @@ const StudentDeatil =({scId})=>{
                  <li><b>School ID</b> <p>{studentDetailData?.body?.scl_id}</p></li>
                  <li><b>First name</b> <p>{studentDetailData?.body?.stu_first_name}</p></li>
                  <li><b>Last name</b> <p>{studentDetailData?.body?.stu_last_name}</p></li>
+                 <li><b>Unique Student ID</b> <p>{studentDetailData?.body?.unique_student_id}</p></li>
                  <li><b>Student DOB</b> <p>{studentDetailData?.body?.stu_dob}</p></li>
                  <li><b>Student gender</b> <p>{studentDetailData?.body?.stu_gender}</p></li>
                  <li><b>Student Current Address</b> <p>{studentDetailData?.body?.stu_current_address}</p></li>
@@ -60,7 +70,7 @@ const StudentDeatil =({scId})=>{
                  <li><b>Emg email ID</b> <p>{studentDetailData?.body?.emg_email_id}</p></li>
                  <li><b>Emg relationship to student</b> <p>{studentDetailData?.body?.emg_relationship_to_student}</p></li>
                  <li><b>Status</b> <p>{studentDetailData?.body?.status}</p></li>
-                 <li><b>Authorized Name</b> <p>{studentDetailData?.body?.authorized_signatory_name}</p></li>
+                 {/* <li><b>Authorized Name</b> <p>{studentDetailData?.body?.authorized_signatory_name}</p></li> */}
             </ul>}
             </aside>
 

@@ -4,7 +4,10 @@ import axios from "axios";
 import { BASE_URL } from "../../redux/constants/constants";
 import {BsPlusLg} from "react-icons/bs"
 import {CgClose} from "react-icons/cg"
+import Cookies from 'js-cookie';
+
 const TeacherDeatil =({techId})=>{
+    const token = Cookies.get('jwtToken');
     const [teacherDetailData, setTeacherDetailData] = useState([])
     const [isOpen, setIsOpen] = useState(0)
 
@@ -12,7 +15,13 @@ const TeacherDeatil =({techId})=>{
         try {
         const response = await axios.post(`${BASE_URL}/teacher/get_teacher_details`, {
           teacher_id: techId
-        });
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        }
+        );
             setTeacherDetailData(response?.data);
         } catch (error) {
           console.log(error);
@@ -123,9 +132,8 @@ const TeacherDeatil =({techId})=>{
                 <li><b>Tax information</b> <p>{teacherDetailData?.body?.teacher_other_details?.tax_information}</p></li>
                 <li><b>Retirement plan information</b> <p>{teacherDetailData?.body?.teacher_other_details?.retirement_plan_information}</p></li>
                 <li><b>Insurance information</b> <p>{teacherDetailData?.body?.teacher_other_details?.insurance_information}</p></li>
-
                 <li><b>Background check results</b> <p>{teacherDetailData?.body?.teacher_other_details?.background_check_results}</p></li>
-                <li><b>=Drug test results</b> <p>{teacherDetailData?.body?.teacher_other_details?.drug_test_results}</p></li>
+                <li><b>Drug test results</b> <p>{teacherDetailData?.body?.teacher_other_details?.drug_test_results}</p></li>
                 <li><b>Driving record</b> <p>{teacherDetailData?.body?.teacher_other_details?.driving_record}</p></li>
                 </ul>}
             </aside>

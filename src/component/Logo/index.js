@@ -10,12 +10,26 @@ export const Logo = ({white, width, className}) => {
         [styles[width]]: true,
         [className]: true,
       })} >
-       {white ?   <img src={process.env.PUBLIC_URL + '/images/logoWhite.png'} fill contain alt="" /> : 
-       <img src={process.env.PUBLIC_URL + '/images/logo.png'} fill contain alt="" />
+       {white ? <img src={process.env.PUBLIC_URL + '/images/logoWhite.png'} fill contain alt="" /> : 
+       <img src="http://cloftware.com/images/clof.png" fill contain alt="" />
        } 
-      
       </Link>
     )
+}
+
+export const LogoGraph = ({white, width, className}) => {
+  return(
+    <Link to="/" 
+    className={classnames({
+      [styles.logoDivGraph]: true,
+      [styles[width]]: true,
+      [className]: true,
+    })} >
+     
+     <img src={process.env.PUBLIC_URL + '/images/logoGraph.png'} fill contain alt="" />
+    
+    </Link>
+  )
 }
 
 // width use small is default , medium, large 

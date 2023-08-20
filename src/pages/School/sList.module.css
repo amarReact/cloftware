@@ -16,3 +16,37 @@
 
 .btnBord button{ border-color: #ddd; margin-right: 10px;}
 .importRight{ margin-left: auto; margin-right: 10px;}
+
+.ulList{ width: 100%; margin-top: 20px; }
+.ulList ol{ width: 100%; display: flex; flex-wrap: wrap; justify-content: center; margin: 10px 0 -25px 0; }
+.ulList ol li{ margin:0 5px; padding: 0px 8px; border-radius: 30px; text-align: center; font-size: 12px;}
+.ulList ol li.presents{ background: #44AF69; color: #fff;}
+.ulList ol li.absents{ background: red; color: #fff;}
+.ulList ol li.halfDay{ background: #8294C4; color: #fff;}
+.ulList ol li.leaves{ background: #FF5316; color: #fff;}
+
+.uploadImage{ background: none; border: 1px solid #ddd; border-radius: 8px; font-size: 11px; line-height: 11px; padding: 5px; width: 65px; margin: 0 0 0 5px; }
+.addSchool .abPlus{ margin-right: -10px; display: none;}
+.abExIm{ display: none}
+.importRightText{ margin-right: 10px;}
+.importRightText button{ display: flex; align-items: center;}
+@media screen and (max-width:1024px) {
+    .sListCntr{ padding-right: 0px; padding-top: 0px;}
+}
+
+@media screen and (max-width:768px) {
+  .importRight button{ font-size: 0px; padding-left: 13px; padding-right: 13px; display: flex; align-items: center; }
+  .importRight button svg{ font-size: 20px;}
+  .abExIm{ display: block; font-size: 17px;}
+  .addSchool button{ font-size: 0px; padding-left: 13px; padding-right: 13px;}
+  .addSchool button svg{ margin: 0px!important; }
+  .addSchool .abPlus{ display: block;}
+}
+
+@media screen and (max-width:475px) {
+.sListCntr [class="headingTop"]{display: flex; flex-direction: column-reverse; width: 100%;}
+.sListCntr [class="headingTop"] h3{ text-align: left; width: 100%; padding-top: 10px;}
+.sListCntr [class="headingTop"] aside{ width: 100%; padding-bottom: 10px;}
+.sListCntr [class="headingTop"] aside > div{ flex: 1; text-align: center; }
+.sListCntr [class="headingTop"] aside > div button { display: flex; justify-content: center;}
+}

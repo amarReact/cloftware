@@ -1,47 +1,84 @@
 import { useEffect, useState } from "react";
-import styles from "./sd.module.css"
+import styles from "./sd.module.css";
 import axios from "axios";
 import ButtonGlobal from "../../component/ButtonGlobal";
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, toast } from "react-toastify";
 import { BASE_URL } from "../../redux/constants/constants";
+import Cookies from "js-cookie";
 
-const SchoolDelete =({scId, setIsDelete})=>{
-    const [schoolDeleteData, setSchoolDeleteData] = useState([])
+const SchoolDelete = ({ scId, setIsDelete, ststusID }) => {
+  const token = Cookies.get("jwtToken");
+  const [isSwitchOn, setIsSwitchOn] = useState(
+    ststusID === "Inactive" ? false : true
+  );
 
-    const schoolDetailFunc = async () => {
-        try {
-        const response = await axios.put(`${BASE_URL}/change_school_status`, {
+  const schoolDetailFunc = async (val) => {
+    try {
+      const response = await axios.put(
+        `${BASE_URL}/change_school_status`,
+        {
           school_id: scId,
-          school_status: "Delete"
+          school_status: val,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response?.status === 400) {
+        toast.error(response?.data?.message);
+      } else {
+        toast.success(response?.data?.message, {
+          autoClose: 2000,
+          position: "top-center",
+          className: 'customToast'
         });
-
-        if(response?.status === 400){
-          toast.error(response?.data?.message);
-        } else{
-          toast.success(response?.data?.message, {position: "bottom-center"});
-          let timer = setTimeout(()=>{
-            setIsDelete(false)
-            clearTimeout(timer)
-          },3000)
-        }
-
-        } catch (error) {
-          console.log(error);
-        }
+        let timer = setTimeout(() => {
+          setIsDelete(false);
+          clearTimeout(timer);
+        }, 3000);
       }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-      const schoolDeleteHit=()=>{
-        schoolDetailFunc(); 
-     
-      }
+  const schoolDeleteHit = (val) => {
+    schoolDetailFunc(val);
+  };
 
-    return(
-        <div className={styles.sdDelete}>
-            <p>Are you sure you want to delete</p>    
-            <ButtonGlobal width="auto" title="Delete" onClick={schoolDeleteHit} />      
-            <ToastContainer />  
-        </div>
-    )
-}
+  const toggleSwitch = (val) => {
+    setIsSwitchOn(!isSwitchOn);
+    schoolDetailFunc(val);
+  };
+
+  return (
+    <div className={styles.sdDelete}>
+      <p>Are you sure you want to change ststus</p>
+
+      <hgroup>
+        <h6>
+          <b>Inactive</b>
+          <button
+            className={`${styles.switch} ${isSwitchOn ? styles.on : ""}`}
+            onClick={() => toggleSwitch(isSwitchOn ? "Inactive" : "Active")}
+          ></button>
+          <span>Active</span>
+        </h6>
+        <ButtonGlobal
+          disable={ststusID === "Delete"}
+          width="auto"
+          size="small"
+          title="Delete"
+          onClick={() => schoolDeleteHit("Delete")}
+        />
+      </hgroup>
+
+      <ToastContainer />
+    </div>
+  );
+};
 
 export default SchoolDelete;

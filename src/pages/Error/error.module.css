@@ -4,35 +4,68 @@
     width: 100%;
     display: flex;
     min-height: 100%;
-    background: #e9e9ea;
-    padding: 30px;
+    padding: 0px;
+    background: #ff5315; align-items: center;
 }
 
 .errorPageIn {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    min-height: 100%;
-    background: #fff;
+    min-height: 100%; flex-direction: column;
     border-radius: 16px;
-    position: relative; flex-direction: row-reverse;
+    position: relative; 
 }
   
 .errorPageIn aside {
-    width: 44%;
-    background: #4153ef;
+    width: 60%;
+
     padding: 20px 40px;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     margin: 1%;
     border-radius: 6px; color: #fff;
+    position:absolute; left: 0px; top: 0px;
 }
   
   
-  .errorPage label{ width: 100%; display: flex; align-items: center; justify-content: center;}
+  .errorPage label{ width: 100%; display: flex; align-items: center; justify-content: flex-end; padding: 40px;}
+  .errorPage label img{max-width: 700px; max-height: 100%;}
 
-.errorPageIn h2{ padding-bottom: 20px;}
+.errorPageIn h2{ padding-bottom: 20px; font-size: 40px; line-height: 50px;}
 
 .logerr{ margin-bottom: 30px;}
-.errorPage p{ padding-bottom: 50px; }
+.errorPage p{ padding-bottom: 50px; font-size: 21px; }
+
+.errorPage h1 {
+    font-size: 190px; line-height: 200px;
+    font-weight: 700; padding: 0 0 40px 0;
+    color: #222a4b;
+}
+
+  
+
+
+@media screen and (max-width:1100px) {
+    .errorPage h1{ font-size: 100px; line-height: 120px; padding-bottom: 20px;}
+    .errorPage aside{ padding-left: 20px; padding-right: 0px;}
+    .errorPageIn h2{ font-size: 23px; line-height: 28px;}
+    .errorPageIn p{ font-size: 13px; line-height: 15px; padding-bottom: 20px;}
+    .errorPageIn label img{ margin-right: -40px; max-width: 500px;}
+}
+
+@media screen and (max-width:600px) {
+    .errorPageIn label img{ margin-right: -40px; max-width: 300px;}
+    .errorPage h1{ font-size: 60px; line-height: 70px; }
+    .errorPage aside{ padding-left: 10px; padding-right: 0px;}
+    .errorPageIn h2{ font-size: 18px; line-height: 26px; padding-bottom: 10px;}
+    .errorPageIn p{ width: 230px;}
+}
+
+@media screen and (max-width:440px) {
+  .errorPageIn aside{ position: inherit; padding-top: 0px; margin: 0px; width: 100%;}
+  .errorPageIn label{ margin: -100px 0 0 0; justify-content: center;}
+  .errorPageIn label img{ margin: 0px;}
+  .errorPageIn p{ width: 100%;}
+}

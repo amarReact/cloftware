@@ -1,111 +1,146 @@
 import styles from "../../pages/School/sList.module.css";
-import { ToastContainer, toast } from 'react-toastify';
 import ButtonGlobal from "../../component/ButtonGlobal";
-import Table from "../../component/Table";
 import {AiFillDelete, AiFillEye, AiOutlinePlusCircle} from "react-icons/ai"
 import {BiEdit} from "react-icons/bi"
 import {Fragment, useEffect, useMemo, useState} from "react"
-import { useNavigate } from "react-router-dom";
-// import ModalGlobal from "../../component/ModalGlobal";
-// import AddClass from "./AddClass";
-// import EditClass from "./EditClass";
-// import DeleteClass from "./DeleteClass";
+
 import ModalGlobal from "../../component/ModalGlobal";
 import AddHoliday from "./AddHoliday";
 import EditHoliday from "./EditHoliday";
 import DeleteHoliday from "./DeleteHoliday";
+import axios from "axios";
+import Cookies from 'js-cookie';
+import { BASE_URL } from "../../redux/constants/constants";
+import { useAuthData, useUserDetailData } from "../../utlis";
+import { DataNotFound } from "../../component/DataNotFound";
+import TableMUI from "../../component/Table/TableMUI";
+import {FaPlus} from "react-icons/fa"
+import {PiExportBold} from "react-icons/pi"
+import {BiImport} from "react-icons/bi"
 
 const HolidayManagement =()=>{
-    const [studentId, setStudentId] = useState(null)
-    const [addClass, setAddClass] = useState(false)
-    const [editClass, setEditClass] = useState(false)
-    const [deleteClass, setDeleteClass] = useState(false)
-    const navigate = useNavigate()
-    const tableData = [
-        {srno: 1, title: "Republic Day", date: "Jan 26, 2023", description: "Description is the pattern of narrative developm" },
-        {srno: 2, title: "Republic Day", date: "Aug 15, 2023", description: "Description is the pattern of narrative developm"  },
-    ]
+  const token = Cookies.get('jwtToken');
+  const {userDataGlobal} = useUserDetailData();
+    const [addHoliday, setAddHoliday] = useState(false)
+    const [offset, setOffset] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [holidayData, setHolidayData] = useState([]);
+    const [isEdit, setIsEdit] = useState(false)
+    const [isDelete, setIsDelete] = useState(false)
+    const [details, setDetails] = useState({})
+    const [holidayID, setHolidayID] = useState(null)
+    const [ststusID, setStatusID] = useState(null)
+    let YEARID = userDataGlobal?.body?.year_id
 
-    const addClassHandler=()=>{
-        setAddClass(!addClass)
+    const classManageListFunc = async ()=>{
+      try {
+        const response = await axios.post(
+          `${BASE_URL}/holiday/get_holiday_list`,
+          {
+            offset,
+            limit,
+            year_id: YEARID,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          }
+        )
+        setHolidayData(response?.data)
+    }
+   catch (error){
+    console.log(error);
+   }
+}
+
+    const addHolidayHandler=()=>{
+      setAddHoliday(!addHoliday)
     }
 
-    const data2 = tableData?.map((item, ind) => {
-        return { srno: item?.srno, title: item?.title, date: item?.date,  description: item?.description  }
+    const data2 = holidayData?.body?.map((item, ind) => {
+        return {  sr_no: ind+1,  holiday_id: item?.holiday_id, title: item?.title, date: item?.date,  description: item?.description,  status: item?.status, year_id: item?.year_id }
       });
-    
-      const editFunction = (row) => {
-        return(
-          <div className={styles.editList}>
-            {/* <AiFillEye onClick={()=> viewHandler(row?.stu_id)} title="View" /> */}
-            <BiEdit onClick={()=> editHandler(row?.stu_id)} title="Edit"  />
-            <AiFillDelete className={row?.status === "Delete" && styles.disabled} onClick={()=> deleteHandler(row?.stu_id)}  title="Delete"  />
-          </div>
-        )
-      }
 
       const editHandler=(val)=>{
-        setEditClass(!editClass)
-        setStudentId(val)
+        setIsEdit(!isEdit)
+        setDetails(val)
       }
     
-      const deleteHandler=(val)=>{
-        setDeleteClass(!deleteClass)
-        setStudentId(val)
+      const deleteHandler=(hid, sid)=>{
+        setIsDelete(!isDelete)
+        setHolidayID(hid)
+        setStatusID(sid)
       }
-    
-      const columns = useMemo(
-        () => [
-          {
-            Header: 'SR. no',
-            accessor: 'srno'
+
+      const dateFunction =(data)=>{
+        const dateObject = new Date(data)
+        const formattedDate = dateObject.toLocaleDateString('en-IN');
+        return formattedDate;
+     }
+
+      const columnsMi = [
+        { id: 'sr_no', label: 'SR. No.', number: true },
+        { id: 'title', label: 'Title' },
+        { id: 'holiday_id', label: 'Holiday ID', hide: true },
+        { id: 'description', label: 'Description', width: "30%" },
+        { id: 'date', label: 'Date',  format: dateFunction },
+        { id: 'status', label: 'status' },
+      ];
+
+      const actions = [
+        {
+          label: <BiEdit title="Edit"  />,
+          onClick: row => {
+             editHandler(row)
           },
-          {
-            Header: 'Title',
-            accessor: 'title'
+        },
+        {
+          label: <AiFillDelete title="Delete"  />,
+          onClick: row => {
+            deleteHandler(row?.holiday_id, row?.status)
           },
-          {
-            Header: 'Date',
-            accessor: 'date'
-          },
-          {
-            Header: 'Description',
-            accessor: 'description'
-          },
-          {
-            Header: 'Action',
-            accessor: editFunction
-          }
-         
-        ],
-        []
-      )
+        },
+      ];
+
+      useEffect(()=>{
+        classManageListFunc()
+      }, [offset, limit, addHoliday, isEdit, isDelete, YEARID])
 
     return(
         <Fragment>
         <div className={styles.sListCntr}>
         <section className="headingTop">
           <h3>Holiday Management</h3>
-          <ButtonGlobal onClick={()=> addClassHandler()} size="small" className={styles.importRight} bgColor="green" width="auto" title="Import"><AiOutlinePlusCircle /></ButtonGlobal>
-          <ButtonGlobal onClick={()=> addClassHandler()} size="small" className={styles.addSchool} bgColor="green" width="auto" title="Add Holiday"><AiOutlinePlusCircle /></ButtonGlobal>
+          <aside>
+          <ButtonGlobal size="small" className={styles.importRight} bgColor="green" width="auto" title="Export"><PiExportBold  className={styles.abExIm} /></ButtonGlobal>
+          <ButtonGlobal size="small" className={styles.importRight} bgColor="green" width="auto" title="Import"><BiImport  className={styles.abExIm} /></ButtonGlobal>
+          <ButtonGlobal onClick={()=> addHolidayHandler()} size="small" className={styles.addSchool} bgColor="green" width="auto" title="Add"><FaPlus  className={styles.abPlus} /></ButtonGlobal>
+          </aside>
         </section>
-            <Table placeholder="Search here..." data={data2} columns={columns} />
+
+        {data2 ? (
+         <TableMUI data={data2} columns={columnsMi} actions={actions} />
+        ) : (
+          <DataNotFound />
+        )}
+
         </div>
 
 
-        {addClass && 
-        <ModalGlobal heading="Add Holiday" outSideClick={false} onClose={setAddClass} activeState={addClass} width="large">
-            <AddHoliday />
+        {addHoliday && 
+        <ModalGlobal heading="Add Holiday" outSideClick={false} onClose={setAddHoliday} activeState={addHoliday} width="large">
+            <AddHoliday setAddHoliday={setAddHoliday} yearID={YEARID} />
         </ModalGlobal>}
 
-        {editClass && 
-        <ModalGlobal heading="Edit Holiday" outSideClick={false} onClose={setEditClass} activeState={editClass} width="large">
-            <EditHoliday />
+        {isEdit && 
+        <ModalGlobal heading="Edit Holiday" outSideClick={false} onClose={setIsEdit} activeState={isEdit} width="large">
+            <EditHoliday setIsEdit={setIsEdit} details={details} />
         </ModalGlobal>}
 
-        {deleteClass && 
-        <ModalGlobal heading="Delete Holiday" outSideClick={false} onClose={setDeleteClass} activeState={deleteClass} width="small">
-            <DeleteHoliday />
+        {isDelete && 
+        <ModalGlobal heading="Delete Holiday" outSideClick={false} onClose={setIsDelete} activeState={isDelete} width="small">
+            <DeleteHoliday setIsDelete={setIsDelete} ststusID={ststusID} holidayID={holidayID} />
         </ModalGlobal>}
 
         </Fragment>

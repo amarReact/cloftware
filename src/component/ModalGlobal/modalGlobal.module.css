@@ -6,7 +6,7 @@
     position: fixed;
     left: 0px;
     top: 0px;
-    z-index: 10;
+    z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -35,8 +35,8 @@
             padding: 40px;
             position: relative;
         }
-    .modalGlobalContent h2{ font-weight: 400; }
-    .modalGlobalContent h2 em{ display: flex; height: 6px; background: #483567; border-radius: 8px; width: 100%; margin-top: 10px; overflow: hidden;}
+    .modalGlobalContent h2{ font-weight: 500; font-size: 20px; }
+    .modalGlobalContent h2 em{ display: none; height: 6px; background: #483567; border-radius: 8px; width: 100%; margin-top: 10px; overflow: hidden;}
     .modalGlobalContent h2 em i{ width: 33.33%; background: #46B7AE;}
     .modalGlobalContent h2 em b{ width: 33.33%; background: #E58F97;}
 
@@ -52,6 +52,11 @@
 .mgClose:hover{ opacity: 0.7;}
 
 .modalActive{ overflow: hidden;}
+
+@media screen and (max-width:900px) {
+    .modalGlobalContent{ padding-left: 18px; padding-right: 18px;}
+}
+
 
 
 

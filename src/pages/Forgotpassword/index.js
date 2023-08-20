@@ -54,7 +54,7 @@ const Forgotpassword = () => {
                 <ButtonGlobal title="Submit" />
               </li>
             </ul>
-            <h5>&copy; 2023 CloftWare.com, All right Reserved</h5>
+            <h5>&copy; 2023 Cloftware.com, All right Reserved</h5>
           </hgroup>
         </section>
       </div>

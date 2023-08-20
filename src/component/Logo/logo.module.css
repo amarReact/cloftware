@@ -1,5 +1,10 @@
 .logoDiv{ display: inline-flex; align-items: center;}
-.logoDiv img{ max-width: 150px;}
-
+.logoDiv img{ max-width: 175px;}
 .medium img{ max-width: 250px;  }
 .large img{ max-width: 350px;  }
+.logoDivGraph{ max-width: 50px; display: inline-flex; align-items: center; justify-content: center;}
+
+
+@media screen and (max-width:400px) {
+    .logoDiv img{ max-width: 140px;}
+}

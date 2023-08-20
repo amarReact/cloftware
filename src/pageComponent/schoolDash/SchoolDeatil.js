@@ -4,7 +4,10 @@ import axios from "axios";
 import { BASE_URL } from "../../redux/constants/constants";
 import {BsPlusLg} from "react-icons/bs"
 import {CgClose} from "react-icons/cg"
+import Cookies from 'js-cookie';
+
 const SchoolDeatil =({scId})=>{
+  const token = Cookies.get('jwtToken');
     const [schoolDetailData, setSchoolDetailData] = useState([])
     const [isOpen, setIsOpen] = useState(0)
 
@@ -12,7 +15,13 @@ const SchoolDeatil =({scId})=>{
         try {
         const response = await axios.post(`${BASE_URL}/get_school_details`, {
           school_id: scId
-        });
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        }
+        );
             setSchoolDetailData(response?.data);
         } catch (error) {
           console.log(error);
@@ -80,7 +89,6 @@ const SchoolDeatil =({scId})=>{
             <aside>
             <h4 onClick={()=> accordianHandler(2)}>{isOpen === 2 ? <CgClose /> : <BsPlusLg />} Commercial Details</h4>
             {isOpen === 2 && <ul>
-                <li><b>Bank Name</b> <p>{schoolDetailData?.body?.commercial_details?.scl_details_id}</p></li>
                 <li><b>Bank Name</b> <p>{schoolDetailData?.body?.commercial_details?.bank_name}</p></li>
                 <li><b>Billing Start Date</b> <p>{schoolDetailData?.body?.commercial_details?.billing_start_date}</p></li>
                 <li><b>Created</b> <p>{schoolDetailData?.body?.commercial_details?.created_at}</p></li>

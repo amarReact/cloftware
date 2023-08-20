@@ -16,10 +16,13 @@ const InputFields = props => {
           [styles['inputFields' + props?.width]]: props?.width,
           [props?.className]: props?.className,
           [styles.erroeBoxTrue]: props?.errorBox,
-          [styles.focusList]: props?.focus
+          [styles.focusList]: props?.focus,
+          [styles['height'+props?.height]]: props?.height,
+          [styles.asterisk]: props?.require
+
         })}
       >
-        {props?.label && <label>{props?.label === 'blank' ? <b></b> : props?.label}</label>}
+        {props?.label && <label>{props?.label === 'blank' ? <b></b> : props?.label} {props?.require && <em>*</em>}</label>}
 
         <artical>
         {props?.fieldname ? (

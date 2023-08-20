@@ -11,10 +11,16 @@ import classnames from 'classnames';
 import { BASE_URL } from "../../redux/constants/constants";
 import Select from "react-select";
 import axios from "axios";
-import { CheckBoxGlobal } from "../../component/CheckBoxGlobal";
-import reactSelect from "react-select";
+import Cookies from 'js-cookie';
+import { useAuthData,  useUserDetailData} from "../../utlis";
 
 const EditTeacher = ({techId, setIsEdit, className}) =>{
+  const  {userDataGlobal} = useUserDetailData()
+  const token = Cookies.get('jwtToken');
+  const [skillData, setSkillData] = useState([]);
+  const [interestsData, setInterestsData] = useState([]);
+  const [hobbiesData, setHobbiesData] = useState(null);
+  const [employmentStatus, setEmploymentStatus] = useState("")
 
   const [studentDetailData, setStudentDetailData] = useState([])
   const [isTitleMr, setIsTitleMr] = useState("")
@@ -22,8 +28,6 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
   const [dateHiring, setDateHiring] = useState(new Date());
   const [isGender, setIsGender] = useState("")
   const [isMaritalStatus, setIsMaritalStatus] = useState("")
-  const [hindiChecked, setHindiChecked] = useState(false);
-  
   const [languagesSpoken, setLanguagesSpoken] = useState([])
 
   const genderOptions =[
@@ -33,52 +37,95 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
 
   const languages = ["hindi", "english", "others"]
 
+   /*******manage skill start***/
+   const handleKeyPress = (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      const newName = event.target.value.trim();
+
+      if (newName !== '') {
+        setSkillData((prevNames1) => [...prevNames1, newName]);
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeSection = (id) => {
+    setSkillData((prevNames1) => {
+      const updatedData = [...prevNames1];
+      updatedData.splice(id, 1);
+      return updatedData;
+    });
+  };
+    /*******manage skill end***/
+
+    /*******manage interestsData start***/
+  const handleKeyPressInterests = (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      const newName = event.target.value.trim();
+
+      if (newName !== '') {
+        setInterestsData((prevNames) => [...prevNames, newName]);
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeInterests = (id) => {
+    setInterestsData((prevNames) => {
+      const updatedData = [...prevNames];
+      updatedData.splice(id, 1);
+      return updatedData;
+    });
+  };
+    /*******manage interestsData end***/
+
+      /*******manage setHobbiesData start***/
+  const handleKeyPressHobbies = (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      const newName = event.target.value.trim();
+
+      if (newName !== '') {
+        setHobbiesData((prevNames) => [...prevNames, newName]);
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeHobbies = (id) => {
+    setHobbiesData((prevNames) => {
+      const updatedData = [...prevNames];
+      updatedData.splice(id, 1);
+      return updatedData;
+    });
+  };
+    /*******manage setHobbiesData end***/
 
   const studentDetailFunc = async () => {
     try {
     const response = await axios.post(`${BASE_URL}/teacher/get_teacher_details`, {
       teacher_id: techId
-    });
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}` 
+      }
+    }
+    );
    
     setStudentDetailData(response?.data?.body)
+    
     setFormData({...formData, 
-      // first_name : response?.data?.body?.other_details?.first_name, 
-      // last_name: response?.data?.body?.other_details?.last_name,
-      // email: response?.data?.body?.email_id,
-      // city: response?.data?.body?.stu_city,
-      // state: response?.data?.body?.stu_state,
-      // pin_code: response?.data?.body?.stu_pin_code,
-      // current_address:  response?.data?.body?.stu_current_address,
-      // permanent_address: response?.data?.body?.stu_permanent_address, 
-      // parent_name: response?.data?.body?.parent_name, 
-      // relationship_to_student: response?.data?.body?.relationship_to_student, 
-      // parent_education_level: response?.data?.body?.parent_education_level, 
-      // parents_occupations: response?.data?.body?.parents_occupations, 
-      // registration_source: response?.data?.body?.registration_source, 
-      // phone_number: response?.data?.body?.phone_number,  
-      // parent_income: response?.data?.body?.parent_income,  
-      // emg_contact_number: response?.data?.body?.emg_contact_number,  
-      // emg_contact_name: response?.data?.body?.emg_contact_name,  
-      // emg_email_id: response?.data?.body?.emg_email_id,  
-      // emg_relationship_to_student: response?.data?.body?.emg_relationship_to_student,  
       teacher_id: techId,
-      school_id: "22",
+      school_id: userDataGlobal?.body?.school_id,
       email: response?.data?.body?.email_id,
-      // title: response?.data?.body?.title,
       first_name: response?.data?.body?.first_name,
       last_name: response?.data?.body?.first_name,
-      // dob: formatDate(response?.data?.body?.dob),
-      // gender: response?.data?.body?.gender,
       address_line1: response?.data?.body?.address_line1,
       state: response?.data?.body?.state,
       city: response?.data?.body?.city,
       pin_code: response?.data?.body?.pin_code,
       phone_number:response?.data?.body?.phone_number,
-      // marital_status:response?.data?.body?.marital_status,
       job_title: response?.data?.body?.teacher_other_details?.job_title,
-      // date_hiring: formatDate(response?.data?.body?.date_hiring),
-      employment_status:response?.data?.body?.teacher_other_details?.employment_status,
-      languages_spoken:response?.data?.body?.languages_spoken,
       
       middle_name: response?.data?.body?.middle_name,
       social_security_number: response?.data?.body?.social_security_number,
@@ -96,10 +143,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
       secondary_teaching_location: response?.data?.body?.secondary_teaching_location,
       professional_development_courses: response?.data?.body?.professional_development_courses,
       professional_development_certificates: response?.data?.body?.professional_development_certificates,
-      professional_development_goals: response?.data?.body?.professional_development_goals,
-      skills: response?.data?.body?.skills, 
-      interests: response?.data?.body?.interests, 
-      hobbies: response?.data?.body?.hobbies, 
+      professional_development_goals: response?.data?.body?.professional_development_goals, 
       emp_id: response?.data?.body?.teacher_other_details?.emp_id, 
       work_schedule: response?.data?.body?.teacher_other_details?.work_schedule, 
       job_description: response?.data?.body?.teacher_other_details?.job_description, 
@@ -119,7 +163,6 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
       drug_test_results:response?.data?.body?.teacher_other_details?.drug_test_results,
       driving_record: response?.data?.body?.teacher_other_details?.driving_record,
       
-      // setIsTitleMr()
       nationality: "Indian",
       country: "Indian"
     }) 
@@ -130,8 +173,10 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
     setStartDob(new Date(response?.data?.body?.dob));
     setDateHiring(new Date(response?.data?.body?.teacher_other_details?.date_hiring))
     setLanguagesSpoken(response?.data?.body?.languages_spoken?.split(","))
-    // setStartDob(new Date(response?.data?.body?.stu_dob))
-    // setIsGender(response?.data?.body?.stu_gender)
+    setSkillData(response?.data?.body?.skills ? response?.data?.body?.skills?.split(",") : [])
+    setInterestsData(response?.data?.body?.interests ? response?.data?.body?.interests?.split(",") : [])
+    setHobbiesData(response?.data?.body?.hobbies ? response?.data?.body?.hobbies?.split(",") : [])
+    setEmploymentStatus({ value: response?.data?.body?.teacher_other_details?.employment_status, label: response?.data?.body?.teacher_other_details?.employment_status })
 
     } catch (error) {
       console.log(error);
@@ -143,10 +188,8 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
     middle_name: '',
     last_name: '',
     email:'',
-    // gender: '',
     phone_number: '',
     address_line1: '',
-    employment_status: '',
     job_title:'',
   
     state: '',
@@ -169,9 +212,6 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
     professional_development_courses:'',
     professional_development_certificates:'',
     professional_development_goals:'',
-    skills: '',
-    interests: '',
-    hobbies: '',
     emp_id:'',
     work_schedule: '',
     job_description: '',
@@ -225,15 +265,10 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
           errors.email = 'Invalid email address';
         }
-        // if (!formData.password) {
-        //   errors.password = 'Password is required';
-        // } 
         if (!formData.job_title) {
           errors.job_title = 'Job Title is required';
         }  
-        if (!formData.employment_status) {
-          errors.employment_status = 'Employment status is required';
-        }  
+   
         if (!formData.address_line1) {
           errors.address_line1 = 'Address is required';
         }
@@ -248,39 +283,11 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         if (!formData.pin_code) {
           errors.pin_code = 'Pincode is required';
         }
-      
-       
-        // if (!formData.parent_education_level) {
-        //   errors.parent_education_level = 'Parent education level is required';
-        // }
-
-      
-        // if (!formData.registration_source) {
-        //   errors.registration_source = 'Registration source required';
-        // }
+    
         if (!formData.phone_number) {
           errors.phone_number = 'Phone number required';
         }
-        // if (!formData.parent_income) {
-        //   errors.parent_income = 'Parent income is required';
-        // }
-        // if (!formData.emg_contact_number) {
-        //   errors.emg_contact_number = 'Emg contact number required';
-        // }
-        // if (!formData.emg_contact_name) {
-        //   errors.emg_contact_name = 'Emg contact name required';
-        // }
-        
-        // if (!formData.emg_email_id) {
-        //   errors.emg_email_id = 'Email is required';
-        // } else if (!/\S+@\S+\.\S+/.test(formData.emg_email_id)) {
-        //   errors.emg_email_id = 'Invalid email address';
-        // }
-
-        // if (!formData.emg_relationship_to_student) {
-        //   errors.emg_relationship_to_student = 'Emg relationship to student required';
-        // }
-
+       
         if (!isGender) {
           errors.gender = 'Please select an Gender option.';
         }
@@ -296,6 +303,10 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         if (languagesSpoken.length === 0) {
           errors.language = 'Please select at least one language';
         }
+
+        if (!employmentStatus) {
+          errors.employment_status = 'Employment status is required';
+        }  
 
         return errors;
       };
@@ -313,25 +324,15 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         { value: "Married", label: "Married" },
       ]
 
-      // const changeTitleMrHandler =(val)=>{
-      //   setIsTitleMr(val.value)
-      // }
-
-      // const changeMaritalStatusHandler=(val)=>{
-      //   setIsMaritalStatus(val.value)
-      // }
+      const employmentStatusOption = [
+        { value: "Salaried", label: "Salaried" },
+        { value: "Unemployed", label: "Unemployed" },
+        { value: "Selfemployed", label: "Selfemployed" },
+      ]
 
       const formatDate = (date) => {
         return moment(date).format("YYYY-MM-DD");
       };
-
-      // const handleHindiChange = (event) => {
-      //   setHindiChecked(event.target.checked);
-      // };
-
-      // const handleEnglishChange = (event) => {
-      //   setEnglishChecked(event.target.checked);
-      // };
 
       const handleCheckboxChange=(name)=>{
         if(languagesSpoken.includes(name)){
@@ -343,18 +344,16 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
      
       }
 
-
-
       const teacherPostFunc = async () => {
         let languagesSpokenList =  languagesSpoken.join(',')
+
         const teacherList = {
-          email: formData?.email,
-          school_id: "12",
+          school_id: `${userDataGlobal?.body?.school_id}`,
           teacher_id: techId,
+          email: formData?.email,
           title: isTitleMr?.value,
           first_name: formData?.first_name,
           last_name: formData?.last_name,
-          // password: formData?.password,
           dob: formatDate(startDob),
           gender: isGender?.value,
           address_line1: formData?.address_line1,
@@ -365,7 +364,6 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           marital_status:isMaritalStatus?.value,
           job_title: formData?.job_title,
           date_hiring: formatDate(dateHiring),
-          employment_status:formData?.employment_status,
           languages_spoken:languagesSpokenList,
           
           middle_name: formData?.middle_name,
@@ -385,9 +383,9 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           professional_development_courses: formData?.professional_development_courses,
           professional_development_certificates: formData?.professional_development_certificates, 
           professional_development_goals: formData?.professional_development_goals, 
-          skills: formData?.skills, 
-          interests: formData?.interests, 
-          hobbies: formData?.hobbies,  
+          skills: skillData?.join(","), 
+          interests: interestsData?.join(","), 
+          hobbies: hobbiesData?.join(","),   
           emp_id: formData?.emp_id, 
           work_schedule: formData?.work_schedule, 
           job_description:formData?.job_description, 
@@ -406,19 +404,23 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           background_check_results:formData?.background_check_results,
           drug_test_results:formData?.drug_test_results,
           driving_record: formData?.driving_record,
-
+          employment_status: employmentStatus?.value,
           nationality: "Indian",
           country: "Indian"
           
         }
 
         axios
-          .post(`${BASE_URL}/teacher/add_edit_teacher`, teacherList)
+          .post(`${BASE_URL}/teacher/add_edit_teacher`, teacherList, {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          })
           .then((response) => {
             if(response?.status == 400 || response?.code == 400){
               toast.error(response?.data?.message, {position: "bottom-center"});
             } else{
-              toast.success(response?.data?.message, {position: "bottom-center"});
+              toast.success(response?.data?.message, {autoClose: 2000, position: "top-center", className: 'customToast'});
               let timer = setTimeout(()=>{
                 setIsEdit(false)
                 clearTimeout(timer)
@@ -435,6 +437,8 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         
       },[techId])
 
+      console.log('skillData', skillData)
+
     return(
       <div 
       className={classnames({
@@ -443,7 +447,8 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         [className]: true,
         
       })}>
-      {studentDetailData &&  
+      {
+      studentDetailData &&  
       
       <div className={styles.purchaseCntr}>
       <div className={styles.allForm}>
@@ -451,24 +456,25 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         <ul className={styles.formFields}>
 
         <li className={styles.threeIn }>
-        <label>Title *</label>
+        <label>Title <em>*</em></label>
       <Select 
         value={isTitleMr} 
         options={titleMrOptions} 
         onChange={option => setIsTitleMr(option)}
-        // onChange={changeTitleMrHandler} 
-        className="loginSelectGlb" />
+        className="loginSelectGlb"
+         />
         {errors?.titleMr && <ErrorBox title={errors?.titleMr} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="First Name *" 
+            label="First Name" 
             id="first_name" 
             name="first_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.first_name}
             onChange={handleChange}  
+            require
           />
           {errors?.first_name && <ErrorBox title={errors?.first_name} />}
         </li>
@@ -478,152 +484,153 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
             label="Middle name" 
             id="middle_name" 
             name="middle_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.middle_name}
             onChange={handleChange}  
           />
-          {errors?.middle_name && <ErrorBox title={errors?.middle_name} />}
+          {/* {errors?.middle_name && <ErrorBox title={errors?.middle_name} />} */}
         </li>
 
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Last name *" 
+            label="Last name" 
             id="last_name" 
             name="last_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.last_name}
-            onChange={handleChange}  
+            onChange={handleChange}
+            require  
           />
           {errors?.last_name && <ErrorBox title={errors?.last_name} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Email ID *" 
+            label="Email ID" 
             id="email" 
             name="email" 
-            text="email"
-            placeholder="Type Text here" 
+            type="email"
+            placeholder="Type email here" 
             value={formData.email}
             onChange={handleChange}  
+            require
           />
           {errors?.email && <ErrorBox title={errors?.email} />}
         </li>
           
         <li className={styles.threeIn }>
-        <label>Gender *</label>
+        <label>Gender <em>*</em></label>
         <Select 
          value={isGender} 
         options={genderOptions} 
-        // onChange={changeGenderHandler} 
         onChange={option => setIsGender(option)}
-        className="loginSelectGlb" />
+        hideSelectedOptions isSearchable={false}
+        className="loginSelectGlb searchHide" />
         {errors?.gender && <ErrorBox title={errors?.gender} />}
         </li>
 
-        {/* <li className={styles.threeIn}>
-          <InputFields 
-            label="Password *" 
-            id="password" 
-            name="password" 
-            type="password"
-            placeholder="Type Text here" 
-            value={formData.password}
-            onChange={handleChange}  
-          />
-          {errors?.password && <ErrorBox title={errors?.password} />}
-        </li> */}
+  
 
         <li className={styles.threeIn }>
-            <label>Date of Birth *</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={startDob} onChange={(date) => setStartDob(date)} />
+            <label>Date of Birth <em>*</em></label>
+            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={startDob} onChange={(date) => setStartDob(date)} scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60} calendarClassName="datePicketCalander" maxDate={new Date()} />
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Phone number *" 
+          label="Phone number" 
           id="phone_number"
           name="phone_number"
           value={formData.phone_number}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type number here" 
+          onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
+          type="number"
+          require
         />
           {errors?.phone_number && <ErrorBox title={errors?.phone_number} />}
         </li>
 
         <li className={styles.threeIn }>
-        <label>Marital Status *</label>
+        <label>Marital Status <em>*</em></label>
         <Select 
         value={isMaritalStatus} 
         options={maritalStatusOptions} 
-        // onChange={changeMaritalStatusHandler} 
         onChange={option => setIsMaritalStatus(option)}
-        className="loginSelectGlb" />
+        hideSelectedOptions isSearchable={false}
+        className="loginSelectGlb searchHide" />
         {errors?.maritalStatus && <ErrorBox title={errors?.maritalStatus} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="State *" 
+          label="State" 
           id="state"
           name="state"
           value={formData.state}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.state && <ErrorBox title={errors?.state} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="City *" 
+          label="City" 
           id="city"
           name="city"
           value={formData.city}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.city && <ErrorBox title={errors?.city} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="Pincode *" 
+          label="Pincode" 
           id="pin_code"
           name="pin_code"
           value={formData.pin_code}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
+          require
+          type="number"
         />
           {errors?.pin_code && <ErrorBox title={errors?.pin_code} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Address *" 
+          label="Address Line 1" 
           id="address_line1"
           name="address_line1"
           value={formData.address_line1}
-          placeholder="Type Text here" 
+          placeholder="Type Address Line 1 here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
+          require
         />
           {errors?.address_line1 && <ErrorBox title={errors?.address_line1} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Job title *" 
+          label="Job title " 
           id="job_title"
           name="job_title"
           value={formData.job_title}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.job_title && <ErrorBox title={errors?.job_title} />}
         </li>
 
 
         <li className={styles.threeIn }>
-           <label>languages spoken *</label>
+           <label>Languages spoken <em>*</em></label>
            <hgroup className={styles.checkBoxCustome}>
             {languages.map((item, ind)=>{
                return (
@@ -633,46 +640,36 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
                )
             })}
             
-           {/* <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="Hindi"
-                  id="hindi"
-                  name="hindi"
-                  checked={hindiChecked}
-                  onChange={()=> handleCheckboxChange("hindi")}
-            />
-            <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="English"
-                  id="english"
-                  name="english"
-                  checked={englishChecked}
-                  onChange={()=> handleCheckboxChange("english") }
-            /> */}
            </hgroup>
           {errors?.language && <ErrorBox title={errors?.language} />}
         </li>
 
-        {/* <li className={styles.threeIn }>
-        <label>Hiring Date *</label>
-        <Select options={maritalStatusOptions} onChange={changeMaritalStatusHandler} className="loginSelectGlb" />
-        {errors?.maritalStatus && <ErrorBox title={errors?.maritalStatus} />}
-        </li> */}
-
         <li className={styles.threeIn }>
-            <label>Hiring Date *</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={dateHiring} onChange={(date) => setDateHiring(date)} />
+            <label>Hiring Date <em>*</em></label>
+            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={dateHiring} onChange={(date) => setDateHiring(date)} calendarClassName="datePicketCalander" scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60} />
         </li>
 
         <li className={styles.threeIn }>
+          <label>Employment status <em>*</em></label>
+        <Select 
+        value={employmentStatus}
+        options={employmentStatusOption} 
+        onChange={option => setEmploymentStatus(option)}
+        hideSelectedOptions 
+        isSearchable={false} 
+        className="loginSelectGlb searchHide"
+        />
+{/*         
+        <li className={styles.threeIn }>
         <InputFields 
-          label="Employment status *" 
+          label="Employment status" 
           id="employment_status"
           name="employment_status"
           value={formData.employment_status}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
-        />
+          require
+        /> */}
           {errors?.employment_status && <ErrorBox title={errors?.employment_status} />}
         </li>
 
@@ -683,7 +680,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="social_security_number"
           name="social_security_number"
           value={formData.social_security_number}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.social_security_number && <ErrorBox title={errors?.social_security_number} />} */}
@@ -695,7 +692,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="emergency_contact_name"
           name="emergency_contact_name"
           value={formData.emergency_contact_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.emergency_contact_name && <ErrorBox title={errors?.emergency_contact_name} />} */}
@@ -707,7 +704,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="emergency_contact_relationship"
           name="emergency_contact_relationship"
           value={formData.emergency_contact_relationship}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.emergency_contact_relationship && <ErrorBox title={errors?.emergency_contact_relationship} />} */}
@@ -720,7 +717,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           type="number"
           name="emergency_phone_number"
           value={formData.emergency_phone_number}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
           {/* {errors?.emergency_phone_number && <ErrorBox title={errors?.emergency_phone_number} />} */}
@@ -732,7 +729,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="spouse_name"
           name="spouse_name"
           value={formData.spouse_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.spouse_name && <ErrorBox title={errors?.spouse_name} />} */}
@@ -744,7 +741,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="dependents"
           name="dependents"
           value={formData.dependents}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.dependents && <ErrorBox title={errors?.dependents} />} */}
@@ -756,7 +753,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="educational_qualifications"
           name="educational_qualifications"
           value={formData.educational_qualifications}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.educational_qualifications && <ErrorBox title={errors?.educational_qualifications} />} */}
@@ -768,7 +765,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="teaching_certifications"
           name="teaching_certifications"
           value={formData.teaching_certifications}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.teaching_certifications && <ErrorBox title={errors?.teaching_certifications} />} */}
@@ -778,10 +775,9 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
         <InputFields 
           label="Previous teaching experience" 
           id="previous_teaching_experience"
-          type="number"
           name="previous_teaching_experience"
           value={formData.previous_teaching_experience}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.previous_teaching_experience && <ErrorBox title={errors?.previous_teaching_experience} />} */}
@@ -790,11 +786,11 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Address" 
+          label="Address Line 2" 
           id="address_line2"
           name="address_line2"
           value={formData.address_line2}
-          placeholder="Type Text here" 
+          placeholder="Type address line 2 here" 
           onChange={handleChange}  
         />
          {/* {errors?.address_line2 && <ErrorBox title={errors?.address_line2} />} */}
@@ -807,7 +803,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="primary_teaching_location"
           name="primary_teaching_location"
           value={formData.primary_teaching_location}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.primary_teaching_location && <ErrorBox title={errors?.primary_teaching_location} />} */}
@@ -819,7 +815,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="secondary_teaching_location"
           name="secondary_teaching_location"
           value={formData.secondary_teaching_location}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.secondary_teaching_location && <ErrorBox title={errors?.secondary_teaching_location} />} */}
@@ -831,7 +827,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="professional_development_courses"
           name="professional_development_courses"
           value={formData.professional_development_courses}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.professional_development_courses && <ErrorBox title={errors?.professional_development_courses} />} */}
@@ -843,7 +839,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="professional_development_certificates"
           name="professional_development_certificates"
           value={formData.professional_development_certificates}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.professional_development_certificates && <ErrorBox title={errors?.professional_development_certificates} />} */}
@@ -855,48 +851,86 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="professional_development_goals"
           name="professional_development_goals"
           value={formData.professional_development_goals}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.professional_development_goals && <ErrorBox title={errors?.professional_development_goals} />} */}
         </li>
 
-        <li className={styles.threeIn }>
+        {/* <li className={styles.threeIn }>
         <InputFields 
           label="Skills" 
           id="skills"
           name="skills"
           value={formData.skills}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-         {/* {errors?.skills && <ErrorBox title={errors?.skills} />} */}
-        </li>
+         {errors?.skills && <ErrorBox title={errors?.skills} />}
+        </li> */}
 
-        <li className={styles.threeIn }>
-        <InputFields 
-          label="Interests" 
-          id="interests"
-          name="interests"
-          value={formData.interests}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
-        />
-         {/* {errors?.interests && <ErrorBox title={errors?.interests} />} */}
-        </li>
+            <li className={`${styles.threeIn} inputLists`}>
+            <label>skills</label>
+                        <input
+                        className="globalInputs"
+                        name="skills"
+                        id="skills"
+                        label="skills" 
+                        placeholder="Enter title here..." 
+                        onKeyPress={handleKeyPress}
+                        />
+                        {skillData && <aside>
+                            {skillData?.map((name, index) => (
+                              <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
+                                {name}
+                                <b onClick={()=> removeSection(index)}>X</b>
+                              </ButtonGlobal>
+                            ))}
+                          </aside>}
+                          {/* {errors?.sections && <ErrorBox title={errors?.sections} />} */}
+           </li>
 
+<li className={`${styles.threeIn} inputLists`}>
+            <label>Interests</label>
+                        <input
+                        className="globalInputs"
+                        name="interests"
+                        id="interests"
+                        label="interests" 
+                        placeholder="Enter title here..." 
+                        onKeyPress={handleKeyPressInterests}
+                        />
+                        {interestsData && <aside>
+                            {interestsData?.map((name, index) => (
+                              <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
+                                {name}
+                                <b onClick={()=> removeInterests(index)}>X</b>
+                              </ButtonGlobal>
+                            ))}
+                          </aside>}
+                          {/* {errors?.sections && <ErrorBox title={errors?.sections} />} */}
+         </li>
 
-        <li className={styles.threeIn }>
-        <InputFields 
-          label="Hobbies" 
-          id="hobbies"
-          name="hobbies"
-          value={formData.hobbies}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
-        />
-         {/* {errors?.hobbies && <ErrorBox title={errors?.hobbies} />} */}
-        </li>
+         <li className={`${styles.threeIn} inputLists`}>
+            <label>Hobbies</label>
+                        <input
+                        className="globalInputs"
+                        name="hobbies"
+                        id="hobbies"
+                        label="hobbies" 
+                        placeholder="Enter title here..." 
+                        onKeyPress={handleKeyPressHobbies}
+                        />
+                        {hobbiesData && <aside>
+                            {hobbiesData?.map((name, index) => (
+                              <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
+                                {name}
+                                <b onClick={()=> removeHobbies(index)}>X</b>
+                              </ButtonGlobal>
+                            ))}
+                          </aside>}
+                          {/* {errors?.sections && <ErrorBox title={errors?.sections} />} */}
+         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
@@ -905,7 +939,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           name="emp_id"
           type="number"
           value={formData.emp_id}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.emp_id && <ErrorBox title={errors?.emp_id} />} */}
@@ -917,7 +951,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="work_schedule"
           name="work_schedule"
           value={formData.work_schedule}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.work_schedule && <ErrorBox title={errors?.work_schedule} />} */}
@@ -929,8 +963,10 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="job_description"
           name="job_description"
           value={formData.job_description}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type Job description here" 
+          onChange={handleChange} 
+          fieldname="textarea"
+          height="medium" 
         />
          {/* {errors?.job_description && <ErrorBox title={errors?.job_description} />} */}
         </li>
@@ -941,7 +977,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="performance_evaluations"
           name="performance_evaluations"
           value={formData.performance_evaluations}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.performance_evaluations && <ErrorBox title={errors?.performance_evaluations} />} */}
@@ -953,7 +989,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="disciplinary_actions"
           name="disciplinary_actions"
           value={formData.disciplinary_actions}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.disciplinary_actions && <ErrorBox title={errors?.disciplinary_actions} />} */}
@@ -965,8 +1001,10 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="reason_for_termination"
           name="reason_for_termination"
           value={formData.reason_for_termination}
-          placeholder="Type Text here" 
+          placeholder="Type Reason for termination here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium" 
         />
          {/* {errors?.reason_for_termination && <ErrorBox title={errors?.reason_for_termination} />} */}
         </li>
@@ -978,7 +1016,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           type="number"
           name="salary_amount"
           value={formData.salary_amount}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.salary_amount && <ErrorBox title={errors?.salary_amount} />} */}
@@ -991,7 +1029,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           type="number"
           name="pay_frequency"
           value={formData.pay_frequency}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.pay_frequency && <ErrorBox title={errors?.pay_frequency} />} */}
@@ -1003,7 +1041,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="bank_name"
           name="bank_name"
           value={formData.bank_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.bank_name && <ErrorBox title={errors?.bank_name} />} */}
@@ -1016,7 +1054,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           name="account_number"
           type="number"
           value={formData.account_number}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.account_number && <ErrorBox title={errors?.account_number} />} */}
@@ -1027,9 +1065,8 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           label="IFCS Code" 
           id="ifcs_code"
           name="ifcs_code"
-          type="number"
           value={formData.ifcs_code}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.ifcs_code && <ErrorBox title={errors?.ifcs_code} />} */}
@@ -1042,7 +1079,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           name="routing_number"
           type="number"
           value={formData.routing_number}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.routing_number && <ErrorBox title={errors?.routing_number} />} */}
@@ -1054,7 +1091,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="tax_information"
           name="tax_information"
           value={formData.tax_information}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.tax_information && <ErrorBox title={errors?.tax_information} />} */}
@@ -1067,7 +1104,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           name="retirement_plan_information"
           // type="number"
           value={formData.retirement_plan_information}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.retirement_plan_information && <ErrorBox title={errors?.retirement_plan_information} />} */}
@@ -1079,7 +1116,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="insurance_information"
           name="insurance_information"
           value={formData.insurance_information}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.insurance_information && <ErrorBox title={errors?.insurance_information} />} */}
@@ -1091,7 +1128,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="background_check_results"
           name="background_check_results"
           value={formData.background_check_results}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.background_check_results && <ErrorBox title={errors?.background_check_results} />} */}
@@ -1104,7 +1141,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="drug_test_results"
           name="drug_test_results"
           value={formData.drug_test_results}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.drug_test_results && <ErrorBox title={errors?.drug_test_results} />} */}
@@ -1116,7 +1153,7 @@ const EditTeacher = ({techId, setIsEdit, className}) =>{
           id="driving_record"
           name="driving_record"
           value={formData.driving_record}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.driving_record && <ErrorBox title={errors?.driving_record} />} */}

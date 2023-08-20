@@ -116,8 +116,8 @@ const SchoolDash =()=>{
              className={classnames({
                 [styles.twists]: true
               })}>
-                <aside><h4><span>1</span>School Details</h4>
-                <p>500000</p>
+                <aside><h4><span>1</span> No. of students</h4>
+                <p>500000  <button>View All</button></p>
                 </aside>
             </WhiteBox>
             <WhiteBox padding="none" radius="none" width="quarter" 
@@ -125,8 +125,9 @@ const SchoolDash =()=>{
                 [styles.twists]: true,
                 [styles.twistsTw]: true,
               })}>
-            <aside> <h4><span>2</span>Teacher Details</h4>
-                <p>500000</p>
+            <aside> <h4><span>2</span> No. of Teacher</h4>
+                <p>500000   <button>View All</button></p>
+     
                 </aside>
             </WhiteBox>
             <WhiteBox padding="none" radius="none" width="quarter" 
@@ -134,8 +135,9 @@ const SchoolDash =()=>{
                 [styles.twists]: true,
                 [styles.twistsThr]: true,
               })}>
-            <aside><h4><span>3</span>Students Details</h4>
-                <p>500000</p>
+            <aside><h4><span>3</span>No. of non-teaching Staff</h4>
+                <p>500000 <button>View All</button></p>
+                
                 </aside>
             </WhiteBox>
             </section>
@@ -147,7 +149,6 @@ const SchoolDash =()=>{
               })}>
                 <aside><h4><span>1</span>School Details</h4>
                 <Chart options={options} series={series} type="bar" height={320} />
-
                 </aside>
             </WhiteBox>
             <WhiteBox padding="none" radius="none" width="half" 

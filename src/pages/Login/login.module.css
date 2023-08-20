@@ -1,35 +1,57 @@
-.loginCntr{ width: 100%; display: flex; min-height: 100%; background: #e9e9ea; padding: 30px;}
-.loginCntrIn{width: 100%; display: flex; justify-content: space-between; min-height: 100%; background: #fff; border-radius: 16px; position: relative;}
-.loginCntr aside{ width: 44%; background: #6b58d3; padding: 20px 40px; display: flex; align-items: center; flex-wrap: wrap; margin: 1%; border-radius: 8px; }
+.loginCntr{ width: 100%; display: flex; min-height: 100%; background: url("../../../public/images/logbg.jpg") no-repeat center center; align-items: center; background-size: cover; padding: 30px;}
+.loginCntrIn{max-width: 440px; width: 100%; margin: 0 auto; padding: 30px; display: flex; justify-content: space-between; min-height: 100%; background: rgba(255,255,255, 0.86); border-radius: 16px; position: relative;}
+.loginCntr aside{ width: 44%; background: #6b58d3; padding: 20px 40px; display: flex; align-items: center; flex-wrap: wrap; margin: 1%; border-radius: 8px; display: none; }
 .loginCntr aside h2{ font-weight: 400; color: #fff;  padding: 0 0 10px 0;}
 .loginCntr aside h2 span{ display: block;}
 .loginCntr aside p{ color: #fff; font-size: 14px; font-weight: 300;}
 .loginCntr aside main{ background: #fff; border-radius: 6px; padding: 20px; margin-top: 20px;}
-.loginCntr section{ width: 45%; margin-right: 4%; display: flex; align-items: center; position: relative; padding: 60px 0;}
+.loginCntr section{ width: 100%; margin-right: 0%; display: flex; align-items: center; flex-direction: column; position: relative; padding: 0px 0;}
 .loginCntr section ul{ width: 100%;}
-.loginCntr section ul li{ width: 100%; padding: 0 0 26px 0;}
-.loginCntr section ul li label{ width: 100%; padding: 0 0 10px 0; display: block}
-.loginCntr section hgroup{ width: 450px; margin: 0 auto;}
-.loginCntr section hgroup h2{ padding: 0px; }
-.loginCntr section h6{ position: absolute; right: -30px; top: 15px;}
-.loginCntr section h6 img{ }
+.loginCntr section ul li{ width: 100%; padding: 0 0 16px 0;}
+.loginCntr section ul li label{ width: 100%; padding: 0 0 4px 0; display: block; font-size: 14px;}
+.loginCntr section hgroup{ width: 100%; margin: 0 auto;}
+.loginCntr section hgroup h2{ padding: 0px; font-size: 20px; line-height: 26px; }
+.loginCntr section h6{ margin-bottom: 20px; width: 100%; }
+.loginCntr section h6 img{ max-width: 190px; }
 .loginCntr section h6 b{ color: #3c3c3c;}
 
-.loginCntr section hgroup h5{ position: absolute; bottom: 15px; left: 0px; right: 0; margin: auto; text-align: center; font-weight: 400; color: #4153ef; font-size: 12px;}
-.loginCntr section hgroup p{ font-size: 14px; font-weight: 300; padding: 0 0 35px 0; position: relative;}
+.loginCntr section hgroup h5{ margin: auto; text-align: center; font-weight: 500; font-size: 12px;}
+.loginCntr section hgroup p{ font-size: 14px; font-weight: 300; padding: 0 0 20px 0; position: relative;}
 .loginCntr section hgroup p::after{ content: ""; position: absolute; left: 0px; bottom: 20px; width: 50%; background: #ddd; height: 2px;}
 .loginSelect input{ height: 38px; width: 100%; }
-.loginSelect [class=" css-13cymwt-control"]{ border-radius: 6px;}
+.loginSelect [class=" css-13cymwt-control"]{ border-radius: 8px;}
 .loginSelect [class=" css-1u9des2-indicatorSeparator"]{ display: none;}
-.loginCntr section ul li .checkbox{ padding: 0px;}
-.loginCntr section ul li .checkbox em{ vertical-align: top;}
+.loginCntr section ul li .checkbox{ padding: 0px; margin-top: 10px;}
+.loginCntr section ul li .checkbox em{ vertical-align: top; font-size: 14px;}
 
 .gbtn{ border: 0px; background: none; display: flex; flex-wrap: wrap; align-items: center; font-size: 16px;}
 .gbtn:hover{ text-decoration: none;}
 .gbtn svg{ margin: 0 10px 0 0; font-size: 20px;}
-.forgotPass{ width: 100%; display: flex; flex-wrap: wrap; justify-content: flex-end; background: none; border: 0px; margin: 10px 0 0 0;}
+.forgotPass{ width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; background: none; border: 0px; margin: 10px 0 0 0;}
 .forgotPass a{ border: 0px; background: none; color: #4153ef; text-decoration: underline;}
 .forgotPass a:hover{ text-decoration: none;}
-
+.loginCntr section ul li.btnFor{ margin-top: 20px;}
 
 .forgotPasswordCntr{ width: 100%;}
+
+.twoSides{ display: flex; flex-wrap: wrap; justify-content: space-between;}
+
+@media screen and (max-width:992px) {
+    .loginCntr aside{ display: none}
+    .loginCntr section{ width: 100%; margin: 0px;}
+    .loginCntr section h6{ right: 0px; width: 100%; text-align: left;}
+}
+
+@media screen and (max-width:768px) {
+    .loginCntr section hgroup{ width: 100%;}
+    .loginCntr{ padding: 10px;}
+    .loginCntr section hgroup h2{ font-size: 18px;}
+    .loginCntr section hgroup h5{ position: initial;}
+}
+
+@media screen and (max-width:470px) {
+    .gbtn{ font-size: 14px;}
+    .loginCntr section ul li .checkbox em{ font-size: 14px;}
+    .gbtn svg{ margin-right: 4px;}
+    .loginCntrIn{ padding-left: 15px; padding-right: 15px;}
+}

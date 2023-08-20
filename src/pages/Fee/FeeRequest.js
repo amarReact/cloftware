@@ -142,7 +142,7 @@ const FeeRequest = () => {
     <Fragment>
       <div className={styles.feeProfileSt}>
         <section className="headingTop">
-          <h3>Fee Request</h3>
+          <h3>Fee Dashboard</h3>
           <ButtonGlobal
             size="small"
             className={styles.addSchool}
@@ -154,7 +154,7 @@ const FeeRequest = () => {
           </ButtonGlobal>
         </section>
 
-        <WhiteBox>
+        <WhiteBox topBorder={true}>
           <form onSubmit={handleSubmit}>
             <ul className={styles.feeForm}>
               <li>
@@ -162,7 +162,7 @@ const FeeRequest = () => {
                   label="Fee Name *"
                   id="feeName"
                   name="feeName"
-                  placeholder="Type Text here"
+                  placeholder="Type text here"
                   value={formData.feeName}
                   onChange={handleChange}
                 />
@@ -175,7 +175,7 @@ const FeeRequest = () => {
                   id="amount"
                   name="amount"
                   type="number"
-                  placeholder="Type Text here"
+                  placeholder="Type text here"
                   value={formData.amount}
                   onChange={handleChange}
                 />
@@ -224,7 +224,7 @@ const FeeRequest = () => {
                   label="Current Academic Year *"
                   id="academicYear"
                   name="academicYear"
-                  placeholder="Type Text here"
+                  placeholder="Type text here"
                   value={formData.academicYear}
                   onChange={handleChange}
                 />

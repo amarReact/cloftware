@@ -10,10 +10,17 @@ import moment from "moment";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../redux/constants/constants";
-import { CheckBoxGlobal } from "../../component/CheckBoxGlobal";
 import axios from "axios";
+import Cookies from 'js-cookie';
+import { useAuthData } from "../../utlis";
 const AddTeacher = () =>{
   const navigate = useNavigate();
+  const token = Cookies.get('jwtToken');
+  const {authList} = useAuthData()
+  const [skillData, setSkillData] = useState([]);
+  const [interestsData, setInterestsData] = useState([]);
+  const [hobbiesData, setHobbiesData] = useState([]);
+  const [employmentStatus, setEmploymentStatus] = useState([])
 
   const formList = {
     first_name: '',
@@ -24,7 +31,6 @@ const AddTeacher = () =>{
     gender: '',
     phone_number: '',
     address_line1: '',
-    employment_status: '',
     job_title:'',
   
     state: '',
@@ -47,9 +53,7 @@ const AddTeacher = () =>{
     professional_development_courses:'',
     professional_development_certificates:'',
     professional_development_goals:'',
-    skills: '',
-    interests: '',
-    hobbies: '',
+  
     emp_id:'',
     work_schedule: '',
     job_description: '',
@@ -79,6 +83,71 @@ const AddTeacher = () =>{
   const [isGender, setIsGender] = useState("")
   const [isMaritalStatus, setIsMaritalStatus] = useState("")
   const [languagesSpoken, setLanguagesSpoken] = useState([])
+
+
+
+  /*******manage skill start***/
+  const handleKeyPress = (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      const newName = event.target.value.trim();
+
+      if (newName !== '') {
+        setSkillData((prevNames) => [...prevNames, newName]);
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeSection = (id) => {
+    setSkillData((prevNames) => {
+      const updatedData = [...prevNames];
+      updatedData.splice(id, 1);
+      return updatedData;
+    });
+  };
+    /*******manage skill end***/
+
+    /*******manage interestsData start***/
+  const handleKeyPressInterests = (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      const newName = event.target.value.trim();
+
+      if (newName !== '') {
+        setInterestsData((prevNames) => [...prevNames, newName]);
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeInterests = (id) => {
+    setInterestsData((prevNames) => {
+      const updatedData = [...prevNames];
+      updatedData.splice(id, 1);
+      return updatedData;
+    });
+  };
+    /*******manage interestsData end***/
+
+      /*******manage setHobbiesData start***/
+  const handleKeyPressHobbies = (event) => {
+    if (event.key === ' ' || event.key === 'Enter') {
+      const newName = event.target.value.trim();
+
+      if (newName !== '') {
+        setHobbiesData((prevNames) => [...prevNames, newName]);
+        event.target.value = '';
+      }
+    }
+  };
+
+  const removeHobbies = (id) => {
+    setHobbiesData((prevNames) => {
+      const updatedData = [...prevNames];
+      updatedData.splice(id, 1);
+      return updatedData;
+    });
+  };
+    /*******manage setHobbiesData end***/
   
       const handleChange = (event) => {
         const { name, value } = event.target;
@@ -118,9 +187,7 @@ const AddTeacher = () =>{
         if (!formData.job_title) {
           errors.job_title = 'Job Title is required';
         }  
-        if (!formData.employment_status) {
-          errors.employment_status = 'Employment status is required';
-        }  
+    
         if (!formData.address_line1) {
           errors.address_line1 = 'Address is required';
         }
@@ -136,38 +203,11 @@ const AddTeacher = () =>{
           errors.pin_code = 'Pincode is required';
         }
       
-       
-        // if (!formData.parent_education_level) {
-        //   errors.parent_education_level = 'Parent education level is required';
-        // }
-
-      
-        // if (!formData.registration_source) {
-        //   errors.registration_source = 'Registration source required';
-        // }
+   
         if (!formData.phone_number) {
           errors.phone_number = 'Phone number required';
         }
-        // if (!formData.parent_income) {
-        //   errors.parent_income = 'Parent income is required';
-        // }
-        // if (!formData.emg_contact_number) {
-        //   errors.emg_contact_number = 'Emg contact number required';
-        // }
-        // if (!formData.emg_contact_name) {
-        //   errors.emg_contact_name = 'Emg contact name required';
-        // }
-        
-        // if (!formData.emg_email_id) {
-        //   errors.emg_email_id = 'Email is required';
-        // } else if (!/\S+@\S+\.\S+/.test(formData.emg_email_id)) {
-        //   errors.emg_email_id = 'Invalid email address';
-        // }
-
-        // if (!formData.emg_relationship_to_student) {
-        //   errors.emg_relationship_to_student = 'Emg relationship to student required';
-        // }
-
+     
         if (!isGender) {
           errors.gender = 'Please select an Gender option.';
         }
@@ -183,6 +223,10 @@ const AddTeacher = () =>{
         if (languagesSpoken.length === 0) {
           errors.language = 'Please select at least one language';
         }
+
+        if (!employmentStatus) {
+          errors.employment_status = 'Employment status is required';
+        }  
 
         return errors;
       };
@@ -200,6 +244,12 @@ const AddTeacher = () =>{
         { value: "Mrs.", label: "Mrs." },
         { value: "Dr.", label: "Dr." },
         { value: "Prof.", label: "Prof." }
+      ]
+
+      const employmentStatusOption = [
+        { value: "Salaried", label: "Salaried" },
+        { value: "Unemployed", label: "Unemployed" },
+        { value: "Selfemployed", label: "Selfemployed" },
       ]
 
       const maritalStatusOptions = [
@@ -234,12 +284,13 @@ const AddTeacher = () =>{
       };
 
 
+      console.log("languagesSpoken", languagesSpoken.join(","))
+
+
       const schoolPostFunc = async () => {
         let languagesSpokenList =  languagesSpoken.join(',')
         const schoolList = {
           email: formData?.email,
-          // teacher_id: "14",
-          school_id:"12",
           title: isTitleMr,
           first_name: formData?.first_name,
           last_name: formData?.last_name,
@@ -254,7 +305,7 @@ const AddTeacher = () =>{
           marital_status:formData?.marital_status,
           job_title: formData?.job_title,
           date_hiring: formatDate(dateHiring),
-          employment_status:formData?.employment_status,
+          employment_status:employmentStatus?.value,
           languages_spoken: languagesSpokenList,
 
           marital_status:isMaritalStatus,
@@ -276,9 +327,10 @@ const AddTeacher = () =>{
           professional_development_courses: formData?.professional_development_courses,
           professional_development_certificates: formData?.professional_development_certificates, 
           professional_development_goals: formData?.professional_development_goals, 
-          skills: formData?.skills, 
-          interests: formData?.interests, 
-          hobbies: formData?.hobbies,  
+          skills: skillData?.join(","), 
+          interests: interestsData?.join(","), 
+          hobbies: hobbiesData?.join(","),  
+
           emp_id: formData?.emp_id, 
           work_schedule: formData?.work_schedule, 
           job_description:formData?.job_description, 
@@ -298,19 +350,24 @@ const AddTeacher = () =>{
           drug_test_results:formData?.drug_test_results,
           driving_record: formData?.driving_record,
 
+          school_id:authList?.school_id?.toString(),
           nationality: "Indian",
-          country: "Indian"
-          
+          country: "Indian",
+          registration_source:"Web"
         }
         
         axios
-          .post(`${BASE_URL}/teacher/add_edit_teacher`, schoolList)
+          .post(`${BASE_URL}/teacher/add_edit_teacher`, schoolList, {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          })
           .then((response) => {
            
             if(response?.status === 400){
               toast.error(response?.data?.message);
             } else{
-              toast.success(response?.data?.message, {position: "bottom-center"});
+              toast.success(response?.data?.message, {autoClose: 2000, position: "top-center", className: 'customToast'});
               let timer = setTimeout(()=>{
                  navigate("/teacher");
                 clearTimeout(timer)
@@ -322,9 +379,7 @@ const AddTeacher = () =>{
           });
       };
 
-    
-   
-
+  
     return(
       <div className={styles.purchaseCntr}>
       <div className={styles.allForm}>
@@ -333,19 +388,20 @@ const AddTeacher = () =>{
         <ul className={styles.formFields}>
 
         <li className={styles.threeIn }>
-        <label>Title *</label>
+        <label>Title <em>*</em></label>
         <Select options={titleMrOptions} onChange={changeTitleMrHandler} className="loginSelectGlb" />
         {errors?.titleMr && <ErrorBox title={errors?.titleMr} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="First Name *" 
+            label="First Name" 
             id="first_name" 
             name="first_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.first_name}
             onChange={handleChange}  
+            require
           />
           {errors?.first_name && <ErrorBox title={errors?.first_name} />}
         </li>
@@ -355,141 +411,157 @@ const AddTeacher = () =>{
             label="Middle name" 
             id="middle_name" 
             name="middle_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.middle_name}
             onChange={handleChange}  
           />
-          {errors?.middle_name && <ErrorBox title={errors?.middle_name} />}
+          {/* {errors?.middle_name && <ErrorBox title={errors?.middle_name} />} */}
         </li>
 
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Last name *" 
+            label="Last name" 
             id="last_name" 
             name="last_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.last_name}
             onChange={handleChange}  
+            require
           />
           {errors?.last_name && <ErrorBox title={errors?.last_name} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Email ID *" 
+            label="Email ID" 
             id="email" 
             name="email" 
-            text="email"
-            placeholder="Type Text here" 
+            type="email"
+            placeholder="Type email here" 
             value={formData.email}
-            onChange={handleChange}  
+            onChange={handleChange}
+            require
           />
           {errors?.email && <ErrorBox title={errors?.email} />}
         </li>
           
         <li className={styles.threeIn }>
-        <label>Gender *</label>
-        <Select options={genderOptions} onChange={changeGenderHandler} className="loginSelectGlb" />
+        <label>Gender <em>*</em></label>
+        <Select options={genderOptions} onChange={changeGenderHandler} hideSelectedOptions isSearchable={false} className="loginSelectGlb searchHide" />
         {errors?.gender && <ErrorBox title={errors?.gender} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Password *" 
+            label="Password " 
             id="password" 
             name="password" 
-            type="password"
-            placeholder="Type Text here" 
+            placeholder="Type password here" 
             value={formData.password}
             onChange={handleChange}  
+            require
+            eye
           />
           {errors?.password && <ErrorBox title={errors?.password} />}
         </li>
 
         <li className={styles.threeIn }>
-            <label>Date of Birth *</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={startDob} onChange={(date) => setStartDob(date)} />
+            <label>Date of Birth <em>*</em></label>
+            <DatePicker dateFormat="yyyy-MM-dd" scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={100}  className="datePicker" calendarClassName="datePicketCalander" maxDate={new Date()} selected={startDob} onChange={(date) => setStartDob(date)}  />
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Phone number *" 
+          label="Phone number" 
           id="phone_number"
           name="phone_number"
           value={formData.phone_number}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type number here" 
+          onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
+          type="number"
+          require
         />
           {errors?.phone_number && <ErrorBox title={errors?.phone_number} />}
         </li>
 
         <li className={styles.threeIn }>
-        <label>Marital Status *</label>
-        <Select options={maritalStatusOptions} onChange={changeMaritalStatusHandler} className="loginSelectGlb" />
+        <label>Marital Status <em>*</em></label>
+        <Select options={maritalStatusOptions} onChange={changeMaritalStatusHandler} hideSelectedOptions isSearchable={false} className="loginSelectGlb searchHide" />
         {errors?.maritalStatus && <ErrorBox title={errors?.maritalStatus} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="State *" 
+          label="State " 
           id="state"
           name="state"
           value={formData.state}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.state && <ErrorBox title={errors?.state} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="City *" 
+          label="City " 
           id="city"
           name="city"
           value={formData.city}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.city && <ErrorBox title={errors?.city} />}
-        </li>
-        <li className={styles.threeIn }>
-        <InputFields 
-          label="Pincode *" 
-          id="pin_code"
-          name="pin_code"
-          value={formData.pin_code}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
-        />
-          {errors?.pin_code && <ErrorBox title={errors?.pin_code} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Address *" 
+          label="Address Line 1" 
           id="address_line1"
           name="address_line1"
           value={formData.address_line1}
-          placeholder="Type Text here" 
+          placeholder="Type Address Line 1 here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
+          require
         />
           {errors?.address_line1 && <ErrorBox title={errors?.address_line1} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Job title *" 
+          label="Pincode " 
+          id="pin_code"
+          name="pin_code"
+          value={formData.pin_code}
+          placeholder="Type Number here" 
+          onChange={handleChange}  
+          type="number"
+          require
+        />
+          {errors?.pin_code && <ErrorBox title={errors?.pin_code} />}
+        </li>
+
+       
+
+        <li className={styles.threeIn }>
+        <InputFields 
+          label="Job title " 
           id="job_title"
           name="job_title"
           value={formData.job_title}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type text here" 
+          onChange={handleChange} 
+          require 
         />
           {errors?.job_title && <ErrorBox title={errors?.job_title} />}
         </li>
 
         <li className={styles.threeIn }>
-           <label>languages spoken *</label>
+           <label>languages spoken <em>*</em></label>
            <hgroup className={styles.checkBoxCustome}>
             {languages.map((item, ind)=>{
                return (
@@ -498,70 +570,33 @@ const AddTeacher = () =>{
                </button>
                )
             })}
-            
-           {/* <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="Hindi"
-                  id="hindi"
-                  name="hindi"
-                  checked={hindiChecked}
-                  onChange={()=> handleCheckboxChange("hindi")}
-            />
-            <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="English"
-                  id="english"
-                  name="english"
-                  checked={englishChecked}
-                  onChange={()=> handleCheckboxChange("english") }
-            /> */}
+          
            </hgroup>
           {errors?.language && <ErrorBox title={errors?.language} />}
         </li>
 
-        {/* <li className={styles.threeIn }>
-           <label>languages spoken *</label>
-           <hgroup>
-           <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="Hindi"
-                  id="hindi"
-                  name="hindi"
-                  checked={hindiChecked}
-                  onChange={handleHindiChange}
-            />
-            <CheckBoxGlobal
-                  className={styles.checkbox}
-                  title="English"
-                  id="english"
-                  name="english"
-                  checked={englishChecked}
-                  onChange={handleEnglishChange}
-            />
-           </hgroup>
-          {errors?.language && <ErrorBox title={errors?.language} />}
-        </li> */}
-
-        {/* <li className={styles.threeIn }>
-        <label>Hiring Date *</label>
-        <Select options={maritalStatusOptions} onChange={changeMaritalStatusHandler} className="loginSelectGlb" />
-        {errors?.maritalStatus && <ErrorBox title={errors?.maritalStatus} />}
-        </li> */}
-
         <li className={styles.threeIn }>
-            <label>Hiring Date *</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={dateHiring} onChange={(date) => setDateHiring(date)} />
+            <label>Hiring Date <em>*</em></label>
+            <DatePicker dateFormat="yyyy-MM-dd" calendarClassName="datePicketCalander" className="datePicker" selected={dateHiring} onChange={(date) => setDateHiring(date)}  scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60} />
         </li>
 
         <li className={styles.threeIn }>
-        <InputFields 
-          label="Employment status *" 
+          <label>Employment status <em>*</em></label>
+        <Select options={employmentStatusOption} 
+        onChange={option => setEmploymentStatus(option)}
+        hideSelectedOptions 
+        isSearchable={false} 
+        className="loginSelectGlb searchHide"
+        />
+        {/* <InputFields 
+          label="Employment status" 
           id="employment_status"
           name="employment_status"
           value={formData.employment_status}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
-        />
+          require
+        /> */}
           {errors?.employment_status && <ErrorBox title={errors?.employment_status} />}
         </li>
 
@@ -572,8 +607,9 @@ const AddTeacher = () =>{
           id="social_security_number"
           name="social_security_number"
           value={formData.social_security_number}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          
         />
           {/* {errors?.social_security_number && <ErrorBox title={errors?.social_security_number} />} */}
         </li>
@@ -584,7 +620,7 @@ const AddTeacher = () =>{
           id="emergency_contact_name"
           name="emergency_contact_name"
           value={formData.emergency_contact_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.emergency_contact_name && <ErrorBox title={errors?.emergency_contact_name} />} */}
@@ -596,7 +632,7 @@ const AddTeacher = () =>{
           id="emergency_contact_relationship"
           name="emergency_contact_relationship"
           value={formData.emergency_contact_relationship}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.emergency_contact_relationship && <ErrorBox title={errors?.emergency_contact_relationship} />} */}
@@ -609,8 +645,8 @@ const AddTeacher = () =>{
           type="number"
           name="emergency_phone_number"
           value={formData.emergency_phone_number}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type number here" 
+          onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
         />
           {/* {errors?.emergency_phone_number && <ErrorBox title={errors?.emergency_phone_number} />} */}
         </li>
@@ -621,7 +657,7 @@ const AddTeacher = () =>{
           id="spouse_name"
           name="spouse_name"
           value={formData.spouse_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.spouse_name && <ErrorBox title={errors?.spouse_name} />} */}
@@ -633,7 +669,7 @@ const AddTeacher = () =>{
           id="dependents"
           name="dependents"
           value={formData.dependents}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.dependents && <ErrorBox title={errors?.dependents} />} */}
@@ -645,7 +681,7 @@ const AddTeacher = () =>{
           id="educational_qualifications"
           name="educational_qualifications"
           value={formData.educational_qualifications}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.educational_qualifications && <ErrorBox title={errors?.educational_qualifications} />} */}
@@ -657,7 +693,7 @@ const AddTeacher = () =>{
           id="teaching_certifications"
           name="teaching_certifications"
           value={formData.teaching_certifications}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.teaching_certifications && <ErrorBox title={errors?.teaching_certifications} />} */}
@@ -667,10 +703,9 @@ const AddTeacher = () =>{
         <InputFields 
           label="Previous teaching experience" 
           id="previous_teaching_experience"
-          type="number"
           name="previous_teaching_experience"
           value={formData.previous_teaching_experience}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
           {/* {errors?.previous_teaching_experience && <ErrorBox title={errors?.previous_teaching_experience} />} */}
@@ -679,12 +714,14 @@ const AddTeacher = () =>{
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Address" 
+          label="Address Line 2" 
           id="address_line2"
           name="address_line2"
           value={formData.address_line2}
-          placeholder="Type Text here" 
+          placeholder="Type address Line 2 here" 
           onChange={handleChange}  
+          height="medium"
+          fieldname="textarea"
         />
          {/* {errors?.address_line2 && <ErrorBox title={errors?.address_line2} />} */}
         </li>
@@ -696,7 +733,7 @@ const AddTeacher = () =>{
           id="primary_teaching_location"
           name="primary_teaching_location"
           value={formData.primary_teaching_location}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.primary_teaching_location && <ErrorBox title={errors?.primary_teaching_location} />} */}
@@ -708,7 +745,7 @@ const AddTeacher = () =>{
           id="secondary_teaching_location"
           name="secondary_teaching_location"
           value={formData.secondary_teaching_location}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.secondary_teaching_location && <ErrorBox title={errors?.secondary_teaching_location} />} */}
@@ -720,7 +757,7 @@ const AddTeacher = () =>{
           id="professional_development_courses"
           name="professional_development_courses"
           value={formData.professional_development_courses}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.professional_development_courses && <ErrorBox title={errors?.professional_development_courses} />} */}
@@ -732,7 +769,7 @@ const AddTeacher = () =>{
           id="professional_development_certificates"
           name="professional_development_certificates"
           value={formData.professional_development_certificates}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.professional_development_certificates && <ErrorBox title={errors?.professional_development_certificates} />} */}
@@ -744,48 +781,111 @@ const AddTeacher = () =>{
           id="professional_development_goals"
           name="professional_development_goals"
           value={formData.professional_development_goals}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.professional_development_goals && <ErrorBox title={errors?.professional_development_goals} />} */}
         </li>
 
-        <li className={styles.threeIn }>
+        {/* <li className={styles.threeIn }>
         <InputFields 
           label="Skills" 
           id="skills"
           name="skills"
           value={formData.skills}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-         {/* {errors?.skills && <ErrorBox title={errors?.skills} />} */}
-        </li>
+        </li> */}
 
-        <li className={styles.threeIn }>
+        <li className={`${styles.threeIn} inputLists`}>
+            <label>skills</label>
+                        <input
+                        className="globalInputs"
+                        name="skills"
+                        id="skills"
+                        label="skills" 
+                        placeholder="Enter title here..." 
+                        onKeyPress={handleKeyPress}
+                        />
+                        {skillData && <aside>
+                            {skillData?.map((name, index) => (
+                              <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
+                                {name}
+                                <b onClick={()=> removeSection(index)}>X</b>
+                              </ButtonGlobal>
+                            ))}
+                          </aside>}
+                          {/* {errors?.sections && <ErrorBox title={errors?.sections} />} */}
+         </li>
+
+         <li className={`${styles.threeIn} inputLists`}>
+            <label>Interests</label>
+                        <input
+                        className="globalInputs"
+                        name="interests"
+                        id="interests"
+                        label="interests" 
+                        placeholder="Enter title here..." 
+                        onKeyPress={handleKeyPressInterests}
+                        />
+                        {interestsData && <aside>
+                            {interestsData?.map((name, index) => (
+                              <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
+                                {name}
+                                <b onClick={()=> removeInterests(index)}>X</b>
+                              </ButtonGlobal>
+                            ))}
+                          </aside>}
+                          {/* {errors?.sections && <ErrorBox title={errors?.sections} />} */}
+         </li>
+
+
+        {/* <li className={styles.threeIn }>
         <InputFields 
           label="Interests" 
           id="interests"
           name="interests"
           value={formData.interests}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-         {/* {errors?.interests && <ErrorBox title={errors?.interests} />} */}
-        </li>
+         {errors?.interests && <ErrorBox title={errors?.interests} />}
+        </li> */}
+
+<li className={`${styles.threeIn} inputLists`}>
+            <label>Hobbies</label>
+                        <input
+                        className="globalInputs"
+                        name="hobbies"
+                        id="hobbies"
+                        label="hobbies" 
+                        placeholder="Enter title here..." 
+                        onKeyPress={handleKeyPressHobbies}
+                        />
+                        {hobbiesData && <aside>
+                            {hobbiesData?.map((name, index) => (
+                              <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
+                                {name}
+                                <b onClick={()=> removeHobbies(index)}>X</b>
+                              </ButtonGlobal>
+                            ))}
+                          </aside>}
+                          {/* {errors?.sections && <ErrorBox title={errors?.sections} />} */}
+         </li>
 
 
-        <li className={styles.threeIn }>
+        {/* <li className={styles.threeIn }>
         <InputFields 
           label="Hobbies" 
           id="hobbies"
           name="hobbies"
           value={formData.hobbies}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-         {/* {errors?.hobbies && <ErrorBox title={errors?.hobbies} />} */}
-        </li>
+         {errors?.hobbies && <ErrorBox title={errors?.hobbies} />}
+        </li> */}
 
         <li className={styles.threeIn }>
         <InputFields 
@@ -794,7 +894,7 @@ const AddTeacher = () =>{
           name="emp_id"
           type="number"
           value={formData.emp_id}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.emp_id && <ErrorBox title={errors?.emp_id} />} */}
@@ -806,7 +906,7 @@ const AddTeacher = () =>{
           id="work_schedule"
           name="work_schedule"
           value={formData.work_schedule}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.work_schedule && <ErrorBox title={errors?.work_schedule} />} */}
@@ -818,8 +918,10 @@ const AddTeacher = () =>{
           id="job_description"
           name="job_description"
           value={formData.job_description}
-          placeholder="Type Text here" 
+          placeholder="Type Job description here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
         />
          {/* {errors?.job_description && <ErrorBox title={errors?.job_description} />} */}
         </li>
@@ -830,7 +932,7 @@ const AddTeacher = () =>{
           id="performance_evaluations"
           name="performance_evaluations"
           value={formData.performance_evaluations}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.performance_evaluations && <ErrorBox title={errors?.performance_evaluations} />} */}
@@ -842,7 +944,7 @@ const AddTeacher = () =>{
           id="disciplinary_actions"
           name="disciplinary_actions"
           value={formData.disciplinary_actions}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.disciplinary_actions && <ErrorBox title={errors?.disciplinary_actions} />} */}
@@ -854,8 +956,10 @@ const AddTeacher = () =>{
           id="reason_for_termination"
           name="reason_for_termination"
           value={formData.reason_for_termination}
-          placeholder="Type Text here" 
+          placeholder="Type Reason for termination here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
         />
          {/* {errors?.reason_for_termination && <ErrorBox title={errors?.reason_for_termination} />} */}
         </li>
@@ -867,7 +971,7 @@ const AddTeacher = () =>{
           type="number"
           name="salary_amount"
           value={formData.salary_amount}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.salary_amount && <ErrorBox title={errors?.salary_amount} />} */}
@@ -880,7 +984,7 @@ const AddTeacher = () =>{
           type="number"
           name="pay_frequency"
           value={formData.pay_frequency}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.pay_frequency && <ErrorBox title={errors?.pay_frequency} />} */}
@@ -892,7 +996,7 @@ const AddTeacher = () =>{
           id="bank_name"
           name="bank_name"
           value={formData.bank_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.bank_name && <ErrorBox title={errors?.bank_name} />} */}
@@ -905,7 +1009,7 @@ const AddTeacher = () =>{
           name="account_number"
           type="number"
           value={formData.account_number}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.account_number && <ErrorBox title={errors?.account_number} />} */}
@@ -918,7 +1022,7 @@ const AddTeacher = () =>{
           name="ifcs_code"
           // type="number"
           value={formData.ifcs_code}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.ifcs_code && <ErrorBox title={errors?.ifcs_code} />} */}
@@ -931,7 +1035,7 @@ const AddTeacher = () =>{
           name="routing_number"
           type="number"
           value={formData.routing_number}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
         />
          {/* {errors?.routing_number && <ErrorBox title={errors?.routing_number} />} */}
@@ -943,7 +1047,7 @@ const AddTeacher = () =>{
           id="tax_information"
           name="tax_information"
           value={formData.tax_information}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.tax_information && <ErrorBox title={errors?.tax_information} />} */}
@@ -956,7 +1060,7 @@ const AddTeacher = () =>{
           name="retirement_plan_information"
           // type="number"
           value={formData.retirement_plan_information}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.retirement_plan_information && <ErrorBox title={errors?.retirement_plan_information} />} */}
@@ -968,7 +1072,7 @@ const AddTeacher = () =>{
           id="insurance_information"
           name="insurance_information"
           value={formData.insurance_information}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.insurance_information && <ErrorBox title={errors?.insurance_information} />} */}
@@ -980,7 +1084,7 @@ const AddTeacher = () =>{
           id="background_check_results"
           name="background_check_results"
           value={formData.background_check_results}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.background_check_results && <ErrorBox title={errors?.background_check_results} />} */}
@@ -993,7 +1097,7 @@ const AddTeacher = () =>{
           id="drug_test_results"
           name="drug_test_results"
           value={formData.drug_test_results}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.drug_test_results && <ErrorBox title={errors?.drug_test_results} />} */}
@@ -1005,7 +1109,7 @@ const AddTeacher = () =>{
           id="driving_record"
           name="driving_record"
           value={formData.driving_record}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
          {/* {errors?.driving_record && <ErrorBox title={errors?.driving_record} />} */}

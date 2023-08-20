@@ -12,20 +12,23 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL, BASE_URL_SCHOOL } from "../../redux/constants/constants";
 import { ToastContainer, toast } from "react-toastify";
+import Cookies from 'js-cookie'; // Import js-cookie library
+import {MdAdminPanelSettings} from "react-icons/md"
+import { setAuthorizationToken } from "../../component/axiosConfig";
+import { useUserDetailData } from "../../utlis";
 
 const Login = () => {
   const formList = {
     email: "",
     password: "",
   };
-
+  const  {userDataGlobal} = useUserDetailData()
   const [selectSchool, setSelectSchool] = useState("");
+  const [schoolName, setSchoolName] = useState("");
   const [selectBoxSelect, setSelectBoxSelect] = useState(false);
   const [getSchoolCode, setGetSchoolCode] = useState({});
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
-
-  const apiUrl = process.env.REACT_APP_API_URL;
 
   const [formData, setFormData] = useState(formList);
   const [errors, setErrors] = useState({});
@@ -42,9 +45,9 @@ const Login = () => {
     if (Object.keys(validationErrors).length === 0) {
       loginPostFunc();
     } else {
-      toast.error("Please fill in the required field!", {
-        position: "top-center",
-      });
+      // toast.error("Please fill in the required field!", {
+      //   position: "top-center",
+      // });
       setErrors(validationErrors);
     }
   };
@@ -57,6 +60,7 @@ const Login = () => {
   const changeHandler = (val) => {
     const vdata = val.value.split(":")[1].trim();
     setSelectSchool(vdata);
+    setSchoolName(val.value)
   };
 
   const continueHandler = () => {
@@ -86,23 +90,6 @@ const Login = () => {
     });
   /*********select box function  end*******/
 
-  /*******user rolebase start********/
-  const userRole = 2;
-  const userRoleBaseFunc = () => {
-    switch (userRole) {
-      case 1:
-        return navigate("/super-admin-dashboard");
-      case 2:
-        return navigate("/school-dashboard");
-      case 3:
-        return navigate("/teacher-dashboard");
-      case 4:
-        return navigate("/student-dashboard");
-      default:
-        return null;
-    }
-  };
-  /******user role base end******/
 
   /*********login function  start*******/
 
@@ -117,28 +104,49 @@ const Login = () => {
       const response = await axios.post(`${BASE_URL}/login`, userLogin);
       const responseData = response.data;
 
-      console.log("response", response)
-
       if (responseData.success) {
         const token = responseData?.body?.token;
         localStorage.setItem("user", JSON.stringify(responseData?.body));
+        Cookies.set('jwtToken', token); // Add this line
+        
         axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-        toast.success(responseData?.message, { position: "top-center" });
+        setAuthorizationToken(token);
+        toast.success(responseData?.message, {autoClose: 2000, position: "top-center", className: 'customToast' });
+        const auth = JSON.parse(localStorage.getItem("user"));
+      
         let timer = setTimeout(() => {
-          userRoleBaseFunc();
+          switch (auth?.role_id) {
+            case 1:
+              return navigate("/super-admin-dashboard");
+            case 2:
+              return navigate("/school-dashboard");
+            case 3:
+              return navigate("/teacher-dashboard");
+            case 4:
+              return navigate("/student-dashboard");
+            default:
+              return null;
+          }
           clearTimeout(timer);
         }, 3000);
       } else {
         const errorCode = responseData.code;
         const errorMessage = responseData.message;
         toast.error(responseData?.message, { position: "top-center" });
+        setErrors({})
       }
     } catch (error) {
-      toast.error(error?.message, { position: "top-center" });
+      toast.error(error?.response?.data?.message, {autoClose: 1000, position: "top-center" });
       console.log(error);
     }
   };
 
+  // useEffect(() => {
+  //   toast.error("Success message", { autoClose: 200000000, position: "top-center", className: 'customToastError' });
+  //   toast.success("Success message", { autoClose: 200000000, position: "top-center", className: 'customToast' });
+  // }, []);
+
+ 
   const validate = (values) => {
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
@@ -160,14 +168,28 @@ const Login = () => {
     schoolSelectFunc();
   }, []);
 
+
+  const backHandler=()=>{
+    setSelectBoxSelect(!selectBoxSelect)
+    setSelectSchool("")
+    setIsChecked(false)
+  }
+
+  const superAdminHandler=()=>{
+    setSelectBoxSelect(!selectBoxSelect)
+    setSchoolName("")
+  }
+
+
   /*********if useer login start*******/
-  useEffect(() => {
-    const auth = localStorage.getItem("user");
-    if (auth) {
-      navigate("/dashboard");
-    }
-  }, []);
+  // useEffect(() => {
+
+  //   // if (authList) {
+  //   //   userRoleBaseFunc();
+  //   // }
+  // }, []);
   /*********if useer login start  end*******/
+
 
   return (
     <div className={styles.loginCntr}>
@@ -188,7 +210,7 @@ const Login = () => {
             <Logo />
           </h6>
           <hgroup>
-            <h2>Welcome Cloftware solutions</h2>
+            <h2>Welcome {(selectBoxSelect && schoolName) || "Cloftware solutions"}</h2>
             <p>Enter your credentials to access your account</p>
 
             {!selectBoxSelect ? (
@@ -199,13 +221,17 @@ const Login = () => {
                     <Select
                       options={options}
                       onChange={changeHandler}
-                      className={styles.loginSelect}
+                      className="loginSelectGlb"
+                      
                     />
                   </li>
                 )}
-                <li>
+                <li className={styles.twoSides}>
                   <button className={styles.gbtn}>
                     <AiFillGoogleCircle /> Sign in With Google
+                  </button>
+                  <button onClick={()=> superAdminHandler()} className={styles.gbtn}>
+                    <MdAdminPanelSettings /> Super Admin
                   </button>
                 </li>
 
@@ -217,7 +243,7 @@ const Login = () => {
                     onChange={handleCheckboxChange}
                   />
                 </li>
-                <li>
+                <li className={styles.btnFor}>
                   <ButtonGlobal
                     title="Continue"
                     disable={selectSchool && isChecked ? false : true}
@@ -244,18 +270,21 @@ const Login = () => {
                     name="password"
                     label="Password"
                   />
+                   {errors?.password && <ErrorBox title={errors?.password} />}
                   <button className={styles.forgotPass}>
+                    <Link onClick={backHandler} to="#">Back</Link>
                     <Link to="/forgot-password">Forgotten password?</Link>
                   </button>
-                  {errors?.password && <ErrorBox title={errors?.password} />}
+                 
                 </li>
-                <li>
+                <li className={styles.btnFor}>
                   <ButtonGlobal title="Submit" onClick={handleSubmit} />
                   <ToastContainer />
                 </li>
               </ul>
             )}
-            <h5>&copy; 2023 CloftWare.com, All right Reserved</h5>
+            <h5>&copy; 2023 Cloftware.com, All right Reserved</h5>
+            <ToastContainer />
           </hgroup>
         </section>
       </div>

@@ -7,23 +7,31 @@ import LeftSidebar from "./LeftSidebar";
 
 const Layout = () => {
   const [auth, setAuth] = useState({});
+  const [isMenu, setIsMenu] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
     setAuth(stored ? JSON.parse(stored) : {});
   }, []);
 
+  useEffect(() => {
+    document.body.classList.toggle('hiddonBody', isMenu);
+    return () => {
+      document.body.classList.toggle('hiddonBody', null);
+    };
+  }, [isMenu]);
+
+
   return (
-    <div className={`${styles.layoutCntr}`}>
+    <div className={`${styles.layoutCntr} ${isMenu && styles.layoutCntrOpen}`}>
         <div className={`${styles.layoutCntrCenter} opehd`}>
-            <LeftSidebar />
-            <div className={styles.rightCover}>
-                <Header auth={auth} />
-                <Outlet />
+            <LeftSidebar setIsMenu={setIsMenu} isMenu={isMenu} />
+            <div data-attr="rightCover" className={styles.rightCover}>
+                <Header isMenu={isMenu} setIsMenu={setIsMenu} auth={auth} />
+                <Outlet auth={auth} />
               <Footer />
             </div>
         </div>
-     
     </div>
   );
 };

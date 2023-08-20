@@ -11,14 +11,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../../redux/constants/constants";
 import axios from "axios";
+import { useAuthData } from "../../utlis";
+import Cookies from 'js-cookie';
 const AddStudent = () =>{
   const navigate = useNavigate();
+  const {authList} = useAuthData()
+  const token = Cookies.get('jwtToken');
 
   const formList = {
     first_name: '',
     last_name: '',
     email:'',
-    // dob: '',
     password: '',
     gender: '',
     current_address: '',
@@ -68,11 +71,13 @@ const AddStudent = () =>{
         if (!formData.last_name) {
           errors.last_name = 'Last name is required';
         }
+
         if (!formData.email) {
           errors.email = 'Email is required';
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
           errors.email = 'Invalid email address';
         }
+        
         if (!formData.password) {
           errors.password = 'Password is required';
         }  
@@ -98,38 +103,22 @@ const AddStudent = () =>{
         if (!formData.relationship_to_student) {
           errors.relationship_to_student = 'Relationship to student is required';
         }
-        // if (!formData.parent_education_level) {
-        //   errors.parent_education_level = 'Parent education level is required';
-        // }
+    
 
         if (!formData.parents_occupations) {
           errors.parents_occupations = 'Parents occupations is required';
         }
-        // if (!formData.registration_source) {
-        //   errors.registration_source = 'Registration source required';
-        // }
-        // if (!formData.phone_number) {
-        //   errors.phone_number = 'Phone number required';
-        // }
-        // if (!formData.parent_income) {
-        //   errors.parent_income = 'Parent income is required';
-        // }
-        // if (!formData.emg_contact_number) {
-        //   errors.emg_contact_number = 'Emg contact number required';
-        // }
-        // if (!formData.emg_contact_name) {
-        //   errors.emg_contact_name = 'Emg contact name required';
-        // }
-        
-        // if (!formData.emg_email_id) {
-        //   errors.emg_email_id = 'Email is required';
-        // } else if (!/\S+@\S+\.\S+/.test(formData.emg_email_id)) {
-        //   errors.emg_email_id = 'Invalid email address';
-        // }
 
-        // if (!formData.emg_relationship_to_student) {
-        //   errors.emg_relationship_to_student = 'Emg relationship to student required';
-        // }
+        if (!formData.phone_number) {
+          errors.phone_number = 'Phone number is required';
+        }  
+
+           if (!formData.emg_email_id) {
+          errors.emg_email_id = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.emg_email_id)) {
+          errors.emg_email_id = 'Invalid email address';
+        }
+        
 
         if (!isGender) {
           errors.gender = 'Please select an Gender option.';
@@ -147,16 +136,13 @@ const AddStudent = () =>{
         setIsGender(val.value)
       }
 
-
       const formatDate = (date) => {
         return moment(date).format("YYYY-MM-DD");
       };
 
-
       const schoolPostFunc = async () => {
         const schoolList = {
           email: formData?.email,
-          school_id: "2",
           first_name: formData?.first_name,
           last_name: formData?.last_name,
           password: formData?.password,
@@ -171,24 +157,31 @@ const AddStudent = () =>{
           relationship_to_student: formData?.relationship_to_student,
           parent_education_level: formData?.parent_education_level,
           parents_occupations: formData?.parents_occupations,
-          // registration_source: formData?.registration_source,
-          registration_source: "Web",
+       
           phone_number: formData?.phone_number,
           parent_income: formData?.parent_income,
           emg_contact_number: formData?.emg_contact_number,
           emg_contact_name: formData?.emg_contact_name,
           emg_email_id: formData?.emg_email_id,
-          emg_relationship_to_student: formData?.emg_relationship_to_student
-          
+          emg_relationship_to_student: formData?.emg_relationship_to_student,
+
+          school_id: authList?.school_id?.toString(),
+          registration_source: "Web",
+          // profile_image: "416GC9D748KG9G5D5126BH1F7KHC.jpeg",
+
         }
         
         axios
-          .post(`${BASE_URL}/student/add_student`, schoolList)
+          .post(`${BASE_URL}/student/add_student`, schoolList, {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          })
           .then((response) => {
             if(response?.status === 400){
               toast.error(response?.data?.message);
             } else{
-              toast.success(response?.data?.message, {position: "bottom-center"});
+              toast.success(response?.data?.message, {autoClose: 2000, position: "top-center", className: 'customToast'});
               let timer = setTimeout(()=>{
                  navigate("/student");
                 clearTimeout(timer)
@@ -209,143 +202,171 @@ const AddStudent = () =>{
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="First Name *" 
+            label="First Name" 
             id="first_name" 
             name="first_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.first_name}
             onChange={handleChange}  
+            require
           />
           {errors?.first_name && <ErrorBox title={errors?.first_name} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Last name *" 
+            label="Last name" 
             id="last_name" 
             name="last_name" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.last_name}
             onChange={handleChange}  
+            require
           />
           {errors?.last_name && <ErrorBox title={errors?.last_name} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Email ID *" 
+            label="Email ID" 
             id="email" 
             name="email" 
-            placeholder="Type Text here" 
+            type="email"
+            placeholder="Type email here" 
             value={formData.email}
             onChange={handleChange}  
+            require
           />
           {errors?.email && <ErrorBox title={errors?.email} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Password *" 
+            label="Password" 
             id="password" 
             name="password" 
-            type="password"
-            placeholder="Type Text here" 
+            placeholder="Type password here" 
             value={formData.password}
-            onChange={handleChange}  
+            onChange={handleChange} 
+            eye 
+            require
           />
           {errors?.password && <ErrorBox title={errors?.password} />}
         </li>
 
         <li className={styles.threeIn }>
-            <label>Date of Birth *</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={startDob} onChange={(date) => setStartDob(date)} />
+            <label>Date of Birth <em>*</em></label>
+            <DatePicker dateFormat="yyyy-MM-dd" scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker" calendarClassName="datePicketCalander" maxDate={new Date()} selected={startDob} onChange={(date) => setStartDob(date)}  />
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Current address *" 
+          label="Current address" 
           id="current_address"
           name="current_address"
           value={formData.current_address}
-          placeholder="Type Text here" 
+          placeholder="Type Current address here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
+          require
         />
           {errors?.current_address && <ErrorBox title={errors?.current_address} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Permanent address *" 
+          label="Permanent address" 
           id="permanent_address"
           name="permanent_address"
           value={formData.permanent_address}
-          placeholder="Type Text here" 
+          placeholder="Type permanent address here" 
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
+          require
         />
          {errors?.permanent_address && <ErrorBox title={errors?.permanent_address} />}
         </li>
 
         <li className={styles.threeIn }>
-        <label>Gender *</label>
-        <Select options={genderOptions} onChange={changeGenderHandler} className="loginSelectGlb" />
+        <label>Gender <em>*</em></label>
+        <Select options={genderOptions} onChange={changeGenderHandler} hideSelectedOptions isSearchable={false} className="loginSelectGlb searchHide" />
         {errors?.gender && <ErrorBox title={errors?.gender} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="State *" 
+          label="State" 
           id="state"
           name="state"
           value={formData.state}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.state && <ErrorBox title={errors?.state} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="City *" 
+          label="City" 
           id="city"
           name="city"
           value={formData.city}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.city && <ErrorBox title={errors?.city} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="Pincode *" 
+          label="Pincode" 
           id="pin_code"
           type="number"
           name="pin_code"
           value={formData.pin_code}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
+          require
         />
           {errors?.pin_code && <ErrorBox title={errors?.pin_code} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="Parent name *" 
+          label="Parent name" 
           id="parent_name"
           name="parent_name"
           value={formData.parent_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.parent_name && <ErrorBox title={errors?.parent_name} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="Relationship to student *" 
+          label="Relationship to student" 
           id="relationship_to_student"
           name="relationship_to_student"
           value={formData.relationship_to_student}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.relationship_to_student && <ErrorBox title={errors?.relationship_to_student} />}
+        </li>
+        <li className={styles.threeIn }>
+        <InputFields 
+          label="Parents occupations" 
+          id="parents_occupations"
+          name="parents_occupations"
+          value={formData.parents_occupations}
+          placeholder="Type text here" 
+          onChange={handleChange}  
+          require
+        />
+          {errors?.parents_occupations && <ErrorBox title={errors?.parents_occupations} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
@@ -353,41 +374,22 @@ const AddStudent = () =>{
           id="parent_education_level"
           name="parent_education_level"
           value={formData.parent_education_level}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-          {errors?.parent_education_level && <ErrorBox title={errors?.parent_education_level} />}
+          {/* {errors?.parent_education_level && <ErrorBox title={errors?.parent_education_level} />} */}
         </li>
-        <li className={styles.threeIn }>
-        <InputFields 
-          label="Parents occupations *" 
-          id="parents_occupations"
-          name="parents_occupations"
-          value={formData.parents_occupations}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
-        />
-          {errors?.parents_occupations && <ErrorBox title={errors?.parents_occupations} />}
-        </li>
-        {/* <li className={styles.threeIn }>
-        <InputFields 
-          label="Registration source *" 
-          id="registration_source"
-          name="registration_source"
-          value={formData.registration_source}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
-        />
-          {errors?.registration_source && <ErrorBox title={errors?.registration_source} />}
-        </li> */}
+      
         <li className={styles.threeIn }>
         <InputFields 
           label="Phone number" 
           id="phone_number"
           name="phone_number"
           value={formData.phone_number}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type number here" 
+          type="number"
+          require
+          onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
         />
           {errors?.phone_number && <ErrorBox title={errors?.phone_number} />}
         </li>
@@ -397,10 +399,11 @@ const AddStudent = () =>{
           id="parent_income"
           name="parent_income"
           value={formData.parent_income}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
+          type="number"
         />
-          {errors?.parent_income && <ErrorBox title={errors?.parent_income} />}
+          {/* {errors?.parent_income && <ErrorBox title={errors?.parent_income} />} */}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
@@ -409,10 +412,10 @@ const AddStudent = () =>{
           type="number"
           name="emg_contact_number"
           value={formData.emg_contact_number}
-          placeholder="Type Text here" 
-          onChange={handleChange}  
+          placeholder="Type number here" 
+          onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
         />
-          {errors?.emg_contact_number && <ErrorBox title={errors?.emg_contact_number} />}
+          {/* {errors?.emg_contact_number && <ErrorBox title={errors?.emg_contact_number} />} */}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
@@ -420,10 +423,10 @@ const AddStudent = () =>{
           id="emg_contact_name"
           name="emg_contact_name"
           value={formData.emg_contact_name}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-          {errors?.emg_contact_name && <ErrorBox title={errors?.emg_contact_name} />}
+          {/* {errors?.emg_contact_name && <ErrorBox title={errors?.emg_contact_name} />} */}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
@@ -432,8 +435,9 @@ const AddStudent = () =>{
           id="emg_email_id"
           name="emg_email_id"
           value={formData.emg_email_id}
-          placeholder="Type Text here" 
+          placeholder="Type email here" 
           onChange={handleChange}  
+          require
         />
           {errors?.emg_email_id && <ErrorBox title={errors?.emg_email_id} />}
         </li>
@@ -443,10 +447,10 @@ const AddStudent = () =>{
           id="emg_relationship_to_student"
           name="emg_relationship_to_student"
           value={formData.emg_relationship_to_student}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
         />
-          {errors?.emg_relationship_to_student && <ErrorBox title={errors?.emg_relationship_to_student} />}
+          {/* {errors?.emg_relationship_to_student && <ErrorBox title={errors?.emg_relationship_to_student} />} */}
         </li>
         </ul>
 

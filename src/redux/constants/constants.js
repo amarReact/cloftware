@@ -1,5 +1,5 @@
 
-export const BASE_URL = "https://307d-203-212-233-211.ngrok-free.app/api"
+export const BASE_URL = "https://27c4-2409-4053-d81-f8a9-c9bd-4ed9-2575-3e0a.ngrok-free.app/api"
 export const BASE_URL_SCHOOL = BASE_URL + "/school"
 // process.env.REACT_APP_BASE_URL
 

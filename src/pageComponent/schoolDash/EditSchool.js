@@ -11,10 +11,13 @@ import moment from "moment";
 import classnames from 'classnames';
 import { BASE_URL } from "../../redux/constants/constants";
 import Select from "react-select";
-
 import axios from "axios";
-const EditSchool = ({scId, setIsEdit, className}) =>{
+import Cookies from 'js-cookie';
+import { useUserDetailData } from "../../utlis";
 
+const EditSchool = ({scId, setIsEdit, className}) =>{
+  const token = Cookies.get('jwtToken');
+  const  {userDataGlobal} = useUserDetailData()
   const [schoolDetailData, setSchoolDetailData] = useState([])
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -28,12 +31,25 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
   const [selectPyment, setSelectPayment] = useState("")
   const [selectPymentStatus, setSelectPymentStatus] = useState("")
 
-
   const schoolDetailFunc = async () => {
-    try {
-    const response = await axios.post(`${BASE_URL}/get_school_details`, {
+    const bodyParameters = {
       school_id: scId
-    });
+    };
+    try {
+    const response = await axios.post(`${BASE_URL}/get_school_details`,
+    bodyParameters,
+    {
+      headers: {
+        Authorization: `Bearer ${token}` 
+      }
+    }
+    );
+
+    let gradeList = response?.data?.body?.platform_licence_detail?.grade?.split(",")
+    let newGradeList = gradeList && gradeList.map((v, i)=>{
+      return {value: v, label: v}
+    })
+
     setFormData({...formData, 
       schoolName : response?.data?.body?.school_name, 
       schoolContactNo: response?.data?.body?.school_phone_number,
@@ -67,15 +83,13 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
       bankName: response?.data?.body?.commercial_details?.bank_name,
       monthlySubscriptionFee: response?.data?.body?.commercial_details?.monthly_subscription_fee,
       quarterlyPayment: response?.data?.body?.commercial_details?.quarterly_payment,
-      // quarterlyPayment: response?.data?.body?.commercial_details?.payment_status,
-      password: response?.data?.body?.password || "test",
       teacherAccounts: response?.data?.body?.platform_licence_detail?.num_teachers,
       studentAccounts: response?.data?.body?.platform_licence_detail?.num_student,
       terminationPeriod: response?.data?.body?.platform_licence_detail?.termination_period,
     }) 
 
     setSelectBoard({value : response?.data?.body?.curriculum_board, label: response?.data?.body?.curriculum_board})
-    setSelectGrade({value: response?.data?.body?.platform_licence_detail?.grade, label: response?.data?.body?.platform_licence_detail?.grade})
+    setSelectGrade(newGradeList)
     setSelectPayment({value: response?.data?.body?.commercial_details?.payment_mode, label: response?.data?.body?.commercial_details?.payment_mode})
     setSelectPymentStatus({value: response?.data?.body?.commercial_details?.payment_status, label: response?.data?.body?.commercial_details?.payment_status})
     setPoDate(new Date(response?.data?.body?.commercial_details?.po_date))
@@ -106,7 +120,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
     designation: '',
     contactNo: '',
     emailAddress: '',
-    password: 'test',
+
 
     website: '',
     tanNumber: '',
@@ -232,8 +246,12 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         if (!formData.principalContactNumber) {
           errors.principalContactNumber = 'Contact Number required';
         }
+       
+
         if (!formData.principaleMailID) {
-          errors.principaleMailID = 'EMail ID required';
+          errors.principaleMailID = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(formData.principaleMailID)) {
+          errors.principaleMailID = 'Invalid email address';
         }
 
 
@@ -324,7 +342,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
           authorized_signatory_designation: formData?.designation,
           authorized_signatory_contact_number: formData?.contactNo,
           authorized_signatory_email_id: formData?.emailAddress,
-          password: formData?.password,
+  
 
           website: formData?.website,
       
@@ -337,7 +355,6 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
           num_student: formData?.studentAccounts,
           num_teachers: formData?.teacherAccounts,
-          grade: formData?.grade,
           total_deal_value: formData?.dealValue,
 
           payment_receive: formData?.paymentReceived,
@@ -357,9 +374,10 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
           licence_status: "active",
           curriculum_board: selectBoard?.value,
           school_board: selectBoard?.value,
-          grade: selectGrade?.value,
+          grade: newSelectGrade?.join(","),
+
           termination_period: formData?.terminationPeriod,
-          licence_number:"8521496ut",
+      
           licence_from: formatDate(startDate),
           licence_to: formatDate(endDate),
           po_date : formatDate(poDate),
@@ -367,16 +385,21 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
           proposed_deployment_date:  formatDate(proposedDate),
           billing_start_date: formatDate(billingDate),
           school_id: scId
+              // licence_number:"8521496ut",
     
         }
     
         axios
-          .post(`${BASE_URL}/add_edit_school`, schoolList)
+          .post(`${BASE_URL}/add_edit_school`, schoolList, {
+            headers: {
+              Authorization: `Bearer ${token}` 
+            }
+          })
           .then((response) => {
             if(response?.status === 400){
               toast.error(response?.data?.message);
             } else{
-              toast.success(response?.data?.message, {position: "bottom-center"});
+              toast.success(response?.data?.message, {autoClose: 2000, position: "top-center", className: 'customToast'});
               let timer = setTimeout(()=>{
                 setIsEdit(false)
                 clearTimeout(timer)
@@ -393,6 +416,11 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
       },[scId])
 
 
+      const newSelectGrade = selectGrade && selectGrade.map((item, ind)=>{
+        return item.value
+ });
+
+
     return(
       <div 
       className={classnames({
@@ -407,73 +435,82 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
           <ul className={styles.formFields}>
         <li className={styles.threeIn}>
           <InputFields 
-            label="School Name *" 
+            label="School Name" 
             id="schoolName" 
             name="schoolName" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.schoolName}
             onChange={handleChange}  
+            require
           />
           {errors?.schoolName && <ErrorBox title={errors?.schoolName} />}
         </li>
 
         <li className={styles.threeIn}>
           <InputFields 
-            label="Contact No *" 
+            label="Contact No" 
             id="schoolContactNo" 
             name="schoolContactNo" 
-            placeholder="Type Text here" 
+            placeholder="Type number here" 
             value={formData.schoolContactNo}
-            onChange={handleChange}  
+            onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
+            type="number"
+            require
           />
           {errors?.schoolContactNo && <ErrorBox title={errors?.schoolContactNo} />}
         </li>
 
         <li className={styles.threeIn }>
           <InputFields 
-          label="Address *" 
+          label="Address" 
           id="address"
           name="address"
-          placeholder="Type Text here" 
+          placeholder="Type address here" 
           value={formData.address}
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
+          require 
           />
           {errors?.address && <ErrorBox title={errors?.address} />}
         </li>
        
         <li className={styles.threeIn }>
         <InputFields 
-          label="City *" 
+          label="City" 
           id="city"
           name="city"
           value={formData.city}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.city && <ErrorBox title={errors?.city} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="State *" 
+          label="State" 
           id="state"
           name="state"
           value={formData.state}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
          {errors?.state && <ErrorBox title={errors?.state} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Pincode *" 
+          label="Pincode" 
           type="number" 
           id="pincode"
           name="pincode"
           value={formData.pincode}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
+          require
         />
           {errors?.pincode && <ErrorBox title={errors?.pincode} />}
         </li>
@@ -485,61 +522,68 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <ul className={styles.formFields}>
         <li className={styles.twoIn}>
           <InputFields 
-            label="Trust/Society Name *" 
+            label="Trust/Society Name" 
             id="trustSocietyName" 
             name="trustSocietyName" 
-            placeholder="Type Text here" 
+            placeholder="Type text here" 
             value={formData.trustSocietyName}
             onChange={handleChange}  
+            require
           />
           {errors?.trustSocietyName && <ErrorBox title={errors?.trustSocietyName} />}
         </li>
 
         <li className={styles.twoIn }>
           <InputFields 
-          label="Address *" 
+          label="Address" 
           id="trustSocietyAddress"
           name="trustSocietyAddress"
-          placeholder="Type Text here" 
+          placeholder="Type Address here" 
           value={formData.trustSocietyAddress}
           onChange={handleChange}  
+          fieldname="textarea"
+          height="medium"
+          require
           />
           {errors?.trustSocietyAddress && <ErrorBox title={errors?.trustSocietyAddress} />}
         </li>
        
         <li className={styles.threeIn }>
         <InputFields 
-          label="City *" 
+          label="City" 
           id="trustSocietyCity"
           name="trustSocietyCity"
           value={formData.trustSocietyCity}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
           {errors?.trustSocietyCity && <ErrorBox title={errors?.trustSocietyCity} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="State *" 
+          label="State" 
           id="trustSocietyState"
           name="trustSocietyState"
           value={formData.trustSocietyState}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange}  
+          require
         />
          {errors?.trustSocietyState && <ErrorBox title={errors?.trustSocietyState} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Pincode *" 
+          label="Pincode" 
           type="number" 
           id="trustSocietyPincode"
           name="trustSocietyPincode"
           value={formData.trustSocietyPincode}
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           onChange={handleChange}  
+          require
         />
           {errors?.trustSocietyPincode && <ErrorBox title={errors?.trustSocietyPincode} />}
         </li>
@@ -551,55 +595,59 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <ul className={styles.formFields}>
         <li className={styles.threeIn }>
         <InputFields 
-        label="Authorized Signatory Name *" 
-        placeholder="Type Text here" 
+        label="Authorized Signatory Name" 
+        placeholder="Type text here" 
         id="signatoryName"
         name="signatoryName"
         value={formData.signatoryName}
         onChange={handleChange}  
+        require
         />
            {errors?.signatoryName && <ErrorBox title={errors?.signatoryName} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="Designation *" 
-          placeholder="Type Text here" 
+          label="Designation" 
+          placeholder="Type text here" 
           id="designation"
           name="designation"
           value={formData.designation}
           onChange={handleChange}  
+          require
         />
           {errors?.designation && <ErrorBox title={errors?.designation} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="Contact No. *" 
+          label="Contact No." 
           type="number" 
           id="contactNo"
           name="contactNo"
           value={formData.contactNo}
-          placeholder="Type Text here" 
-          onChange={handleChange} 
+          placeholder="Type number here" 
+          onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
+          require
         />
          {errors?.contactNo && <ErrorBox title={errors?.contactNo} />}
         </li>
         <li className={styles.threeIn }>
         <InputFields 
-          label="E-Mail Address *" 
+          label="E-Mail Address" 
           type="email" 
           id="emailAddress"
           name="emailAddress"
           value={formData.emailAddress}
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           onChange={handleChange} 
+          require
         />
          {errors?.emailAddress && <ErrorBox title={errors?.emailAddress} />}
         </li>
 
-        <li className={styles.threeIn }>
+        {/* <li className={styles.threeIn }>
         <InputFields 
           label="Password *" 
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           id="password"
           name="password"
           value={formData.password}
@@ -607,12 +655,12 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
           disable
         />
           {errors?.password && <ErrorBox title={errors?.password} />}
-        </li>
+        </li> */}
 
         <li className={styles.threeIn }>
         <InputFields 
           label="Website" 
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           id="website"
           name="website"
           value={formData.website}
@@ -627,7 +675,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
        <h3>Other School Details</h3>
        <ul className={styles.formFields}>
        <li className={styles.threeIn }>
-        <label>Board Details *</label>
+        <label>Board Details <em>*</em></label>
        {/* <select className="selectnBoxCustom" value={selectBoard} onChange={changeBaordHandler}>
         {boardOptions.map((item, ind)=>{
           return(
@@ -646,60 +694,65 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
        <li className={styles.threeIn }>
         <InputFields 
-         label="TAN Number *" 
-         placeholder="Type Text here" 
+         label="TAN Number" 
+         placeholder="Type text here" 
          id="tanNumber"
          name="tanNumber"
          value={formData.tanNumber}
          onChange={handleChange} 
+         require
          />
          {errors?.tanNumber && <ErrorBox title={errors?.tanNumber} />}
         </li>
        
         <li className={styles.threeIn }>
         <InputFields 
-          label="TAN Name*" 
-          placeholder="Type Text here" 
+          label="TAN Name" 
+          placeholder="Type text here" 
           id="tanName"
           name="tanName"
           value={formData.tanName}
-          onChange={handleChange}  
+          onChange={handleChange} 
+          require 
         />
         {errors?.tanName && <ErrorBox title={errors?.tanName} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="PAN Number *" 
-          placeholder="Type Text here" 
+          label="PAN Number" 
+          placeholder="Type text here" 
           id="panNumber"
           name="panNumber"
           value={formData.panNumber}
           onChange={handleChange}  
+          require
         />
           {errors?.panNumber && <ErrorBox title={errors?.panNumber} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="PAN Name *" 
-          placeholder="Type Text here" 
+          label="PAN Name" 
+          placeholder="Type text here" 
           id="panName"
           name="panName"
           value={formData.panName}
           onChange={handleChange} 
+          require
         />
           {errors?.panName && <ErrorBox title={errors?.panName} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="GST Number *" 
-          placeholder="Type Text here" 
+          label="GST Number" 
+          placeholder="Type text here" 
           id="gstNumber"
           name="gstNumber"
           value={formData.gstNumber}
           onChange={handleChange}  
+          require
         />
         {errors?.gstNumber && <ErrorBox title={errors?.gstNumber} />}
         </li>
@@ -707,14 +760,14 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
        </section>
 
        <section>
-       <h3>School Software Details</h3>
+       <h3>User details</h3>
        <ul className={styles.formFields}>
 
        <li className={styles.threeIn}>
         <InputFields 
           label="No. of Student Accounts" 
           type="number" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="studentAccounts"
           name="studentAccounts"
           value={formData.studentAccounts}
@@ -727,7 +780,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <InputFields 
           label="No. of Teacher Accounts" 
           type="number" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="teacherAccounts"
           name="teacherAccounts"
           value={formData.teacherAccounts}
@@ -740,7 +793,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <InputFields 
           label="Termination Period" 
           type="number" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="terminationPeriod"
           name="terminationPeriod"
           value={formData.terminationPeriod}
@@ -761,8 +814,8 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
        <Select 
         value={selectGrade} 
         options={gradeOptions} 
+        isMulti  
         onChange={option => setSelectGrade(option)}
-        // onChange={changeTitleMrHandler} 
         className="loginSelectGlb" />
 
       {errors?.grade && <ErrorBox title={errors?.grade} />}
@@ -770,12 +823,16 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
         <li className={styles.threeIn }>
             <label>License Start Date</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={startDate} onChange={(date) => setStartDate(date)} />
+            <DatePicker dateFormat="yyyy-MM-dd" scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander" selected={startDate} onChange={(date) => setStartDate(date)}
+                minDate={new Date()}
+            />
         </li>
 
         <li className={styles.threeIn }>
             <label>End Date</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={endDate} onChange={(date) => setEndDate(date)} />
+            <DatePicker dateFormat="yyyy-MM-dd"  scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander" selected={endDate} onChange={(date) => setEndDate(date)}
+            minDate={startDate ? new Date(startDate.getTime() + 86400000) : null}
+            />
         </li>
        </ul>
        </section>
@@ -785,10 +842,10 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
        <ul className={styles.formFields}>
        <li className={styles.threeIn }>
         <label>Enter PO Date</label>
-        <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={poDate} onChange={(date) => setPoDate(date)} />
+        <DatePicker dateFormat="yyyy-MM-dd"  scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander" selected={poDate} onChange={(date) => setPoDate(date)} />
         {/* <InputFields 
           label="The rate given below above is inclusive of all Government taxes as on (Enter PO Date)" 
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           id="poDate"
           name="poDate"
           value={formData.poDate}
@@ -801,7 +858,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <InputFields 
           label="Total Deal Value" 
           type="number" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="dealValue"
           name="dealValue"
           value={formData.dealValue}
@@ -814,7 +871,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <InputFields 
           label="Payment Received" 
           type="number" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="paymentReceived"
           name="paymentReceived"
           value={formData.paymentReceived}
@@ -827,7 +884,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <InputFields 
           label="Payment Remaining" 
           type="number" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="paymentRemaining"
           name="paymentRemaining"
           value={formData.paymentRemaining}
@@ -856,13 +913,13 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
         <li className={styles.threeIn }>
             <label>Deposit Date</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={depositDate} onChange={(date) => setDepositDate(date)} />
+            <DatePicker dateFormat="yyyy-MM-dd"  scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander" selected={depositDate} onChange={(date) => setDepositDate(date)} />
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
           label="Cheque/DD/Transaction No" 
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           id="chequeDDNo"
           name="chequeDDNo"
           value={formData.chequeDDNo}
@@ -874,7 +931,7 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <li className={styles.threeIn }>
         <InputFields 
           label="Bank Name" 
-          placeholder="Type Text here" 
+          placeholder="Type text here" 
           id="bankName"
           name="bankName"
           value={formData.bankName}
@@ -886,11 +943,12 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <li className={styles.threeIn }>
         <InputFields 
           label="Monthly Subscription Fee" 
-          placeholder="Type Text here" 
+          placeholder="Type number here" 
           id="monthlySubscriptionFee"
           name="monthlySubscriptionFee"
           value={formData.monthlySubscriptionFee}
           onChange={handleChange} 
+          type="number"
         />
          {errors?.monthlySubscriptionFee && <ErrorBox title={errors?.monthlySubscriptionFee} />}
         </li>
@@ -899,22 +957,23 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
         <li className={styles.threeIn }>
           <InputFields 
             label="Quarterly Payment" 
-            placeholder="Type Text here" 
+            placeholder="Type number here" 
             id="quarterlyPayment"
             name="quarterlyPayment"
             value={formData.quarterlyPayment}
             onChange={handleChange} 
+            type="number"
           />
           {errors?.quarterlyPayment && <ErrorBox title={errors?.quarterlyPayment} />}
         </li>
 
         <li className={styles.threeIn }>
             <label>Proposed Deployment Date</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={proposedDate} onChange={(date) => setProposedDate(date)} />
+            <DatePicker dateFormat="yyyy-MM-dd" scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander" selected={proposedDate} onChange={(date) => setProposedDate(date)} />
         </li>
         <li className={styles.threeIn }>
             <label>Billing Start Date</label>
-            <DatePicker dateFormat="yyyy-MM-dd"  className="datePicker" selected={billingDate} onChange={(date) => setBillingDate(date)} />
+            <DatePicker dateFormat="yyyy-MM-dd" scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander" selected={billingDate} onChange={(date) => setBillingDate(date)} />
         </li>
 
         <li className={styles.threeIn }>
@@ -944,38 +1003,41 @@ const EditSchool = ({scId, setIsEdit, className}) =>{
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="Principal/Academic Head/Coordinator Name *" 
-          placeholder="Type Text here" 
+          label="Principal/Academic Head/Coordinator Name" 
+          placeholder="Type text here" 
           id="principalName"
           name="principalName"
           value={formData.principalName}
           onChange={handleChange} 
+          require
         />
         {errors?.principalName && <ErrorBox title={errors?.principalName} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-        label="Contact Number *" 
+        label="Contact Number" 
         type="number" 
-        placeholder="Type Text here" 
+        placeholder="Type number here" 
         id="principalContactNumber"
         name="principalContactNumber"
         value={formData.principalContactNumber}
-        onChange={handleChange} 
+        onChange={(e) => (e.target.value.length <= 10 ? handleChange(e) : null)}
+        require
         />
           {errors?.principalContactNumber && <ErrorBox title={errors?.principalContactNumber} />}
         </li>
 
         <li className={styles.threeIn }>
         <InputFields 
-          label="E-Mail ID *" 
+          label="E-Mail ID" 
           type="email" 
-          placeholder="Type Text here" 
+          placeholder="Type email here" 
           id="principaleMailID"
           name="principaleMailID"
           value={formData.principaleMailID}
           onChange={handleChange} 
+          require
         />
         {errors?.principaleMailID && <ErrorBox title={errors?.principaleMailID} />}
         </li>

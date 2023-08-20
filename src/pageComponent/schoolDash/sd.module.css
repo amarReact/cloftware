@@ -3,7 +3,7 @@
 .sdDiv ul{ width: calc(100% - 40px); margin: auto; display: flex; flex-wrap: wrap; border-left: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 20px; margin-bottom: 20px; }
 .sdDiv ul li{ width: 16.66%; border-bottom: 1px solid #ddd; border-right: 1px solid #ddd; padding: 10px;}
 .sdDiv ul li b{ font-size: 14px; font-weight: 500;}
-.sdDiv ul li p{ font-size: 13px; padding: 0px; word-wrap:break-word;}
+.sdDiv ul li p{ font-size: 13px; padding: 0px; word-wrap:break-word; color: #E58F97;}
 .sdDiv aside h4{ font-weight: 500; padding: 15px 0 15px 40px; position: relative; cursor: pointer; }
 .sdDiv aside h4 svg{ position: absolute; left: 10px; top: 19px;}
 .sdDiv aside{ display: flex; flex-direction: column; width: 100%; margin-top: 8px; background: #FFF7ED; border-left: 4px solid #F7C392; border-radius: 4px;}
@@ -12,3 +12,40 @@
 .sdDiv aside:nth-child(3){ background: #FEF0F2; border-color: rgb(240,161,183);}
 .sdDiv aside:nth-child(4){ background: rgb(238,248,255); border-color: rgb(147,212,246);}
 .sdDelete{ width: 100%; padding: 20px 0 0px 0; text-align: center; }
+.sdDelete hgroup{ display: flex; flex-wrap: wrap; align-items: center; justify-content:space-around; }
+.sdDelete h6{ display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;}
+.sdDelete h6 b{ color: #5480ED;}
+.sdDelete h6 span{ color: #44AF69; margin:0px;}
+.sdDiv ul.flexOne{ margin-top: 0px;}
+.flexOne li{ flex: 1;}
+
+.flexOneUp li{ flex: initial;}
+.switch {width: 60px; height: 30px; background-color: #5480ED; border-radius: 15px; position: relative; cursor: pointer; margin: 0 10px; }
+  .switch::before {content: ""; position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; background-color: white; border-radius: 50%; transition: transform 0.2s; }
+  .switch.on {background-color: #44AF69;}
+  .switch.on::before {transform: translateX(30px); }
+.toggleswitch { position: relative;  width: 60px; height: 30px; background-color: #ccc; border-radius: 15px; cursor: pointer;}
+  
+  .toggleswitch.active {background-color: #4CAF50;}
+  .toggleswitch .switches { position: absolute; top: 2px;left: 2px; width: 26px; height: 26px; border-radius: 13px; background-color: #fff; transition: transform 0.3s;}
+  .toggleswitch.active .switches {transform: translateX(30px); background-color: #4CAF50;}
+  .toggleswitch.delete .switches {background-color: #f44336;}
+  .importTeacherCntr{ width: 100%; padding: 30px 0 0 0;}
+  .importTeacherCntr2{ border-top: 1px solid #ddd; padding-top: 20px; margin-top: 25px;}
+.importTeacherCntr1{ padding: 0 0 10px 0;}
+  
+
+@media screen and (max-width:900px) {
+  .sdDiv ul li{ width: 33.33%;}
+  .sdDivIn{ min-height: initial;}
+}
+
+@media screen and (max-width:650px) {
+  .sdDiv ul li{ width: 50%;}
+  .sdDiv ul{ margin-left: 5px; margin-right: 5px; width: calc(100% - 10px);}
+}
+
+@media screen and (max-width:400px) {
+  .sdDiv ul li{ width: 100%;}
+
+} 

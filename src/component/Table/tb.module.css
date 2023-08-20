@@ -1,5 +1,7 @@
-.tableDiv{ width: 100%; padding-bottom: 10px; }
-.tableFull{ width: 100%; background: #fff; padding: 20px; border-radius: 0 0 4px 4px; border-top: 15px solid #e35959; position:relative;}
+.tableDiv{ width:320px; padding-bottom: 10px; }
+
+.tableFull{ width: 100%; background: #fff; padding: 20px; border-radius: 8px; 
+    position:relative;}
 .tableFull::before {
     content: "";
     position: absolute;
@@ -8,25 +10,55 @@
     height: 15px;
     width: 80%;
     background: #F6CBCB;
+    display: none;
 }
 .tableBottom{ width: 100%; padding-top: 10px; display: flex; flex-wrap: wrap; justify-content: space-between;}
 .tableBottom section button[disabled]{opacity: 0.5;}
 .tableBottom section button{ background: #5480ED; padding: 6px 12px; border-radius: 4px; font-weight: 700; color: #fff; }
 .tableBottom aside select{ width: 50px; height: 35px; border: 1px solid #ddd; border-radius: 4px; margin:0 0 0 10px }
 
-@media screen and (max-width:540px) {
-.tableBottom, .tableBottom section button{ font-size: 12px;}
-.tableBottom section button{ padding-left: 5px; padding-right: 5px;}
+.dfn{ width: 100%; padding: 10px; color: red;}
+
+.tableFull[attr="tablesMui"] table td b{ display: inline-block; width: 100%; text-align: center; text-transform: capitalize; text-align: left;}
+.tableFull[attr="tablesMui"] table td b[attr-data="Inactive"]{ background: #5480ED; padding: 5px 10px; border-radius: 4px; font-size: 10px; color: #fff;text-align: center; max-width: 65px;}
+.tableFull[attr="tablesMui"] table td b[attr-data="Delete"]{ background: #FF5316; padding: 5px 10px; border-radius: 4px; font-size: 10px; color: #fff;text-align: center; max-width: 65px;}
+.tableFull[attr="tablesMui"] table td b[attr-data="Active"]{ background: #44AF69; padding: 5px 10px; border-radius: 4px; font-size: 10px; color: #fff; text-align: center; max-width: 65px;}
+.tableFull[attr="tablesMui"] table td button { padding: 0 10px; width: 30px; max-width: 30px; min-width: auto; height: 30px; padding: 0px; border-radius: 50%; margin: 0 4px; background: #F7F7FA;  color: #52536D; font-size: 16px; }
+.tableFull[attr="tablesMui"] table td button:hover{ background: #3d5ee1; color: #fff;}
+
+.tableFull[attr="tablesMui"] [attr-data="tablePagination"]{ margin-top: 10px;}
+.tableFull[attr="tablesMui"] [attr-data="tablePagination"] >div{ padding-left: 0px;}
+.tableFull[attr="tablesMui"] [attr-data="paginationBtn"]{ display: flex; margin: 0 0 0 0px; order: -1;}
+.tableFull[attr="tablesMui"] [attr-data="paginationBtn"] button{ background: #5480ED; color: #fff; border-radius: 8px; margin: 0 4px;}
+.tableFull[attr="tablesMui"] [attr-data="paginationBtn"] button[disabled]{ opacity: 0.3;}
+.tableFull[attr="tablesMui"] p{ padding: 0px;}
+
+.tableFull[attr="tablesMui"] [attr-data="paginationBtn"] button {
+    width: 100%;
+    height: 32px;
+    background: #3d5ee1;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    border: 0px;
+    padding: 0 20px;
 }
 
 
-.tableFull input,
+.tableFull input[type="search"]{
+    border: 1px solid #999;
+    border-radius: 6px;
+    padding: 0 20px;
+    height: 40px; font-size: 15px;
+    width: 100%;
+}
 .tableFull select {
-    border: 1px solid #eee;
+    border: 1px solid #999;
     border-radius: 6px;
     padding: 0 20px;
     height: 40px;
-    width: 50%;
+    width: 100%;
 }
 
 .tableFull table {
@@ -34,7 +66,6 @@
     font-size: 14px;
     line-height: 16px;
     padding-top: 0px;
-    border: 1px solid #eee;
     border-right: 0px;
     border-bottom: 0px;
     border-collapse: collapse;
@@ -45,17 +76,75 @@
     text-align: left;
     font-weight: 500;
     border:0px; border-spacing: 0px; 
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
-    padding: 10px 10px;
-    background: #f8f8f8;
-    padding: 10px 7px; font-size: 13px;
+    border-bottom: 1px solid #dee2e6;
+    padding: 15px 7px; text-transform: capitalize;
+    background: #f8f9fa;
+    font-size: 14px;
 }
 
-.tableFull table td {
-    text-align: left;
-    font-weight: 400;
-    border-bottom: 1px solid #eee;
-    border-right: 1px solid #eee;
-    padding: 10px 7px; font-size: 13px;
+.tableFullIn{ margin-top: 18px; width: 100%; }
+
+.tableFull table{ margin-top: 10px; } 
+
+.tableFull table td { text-align: left; font-weight: 400;  border: 0px; padding: 20px 7px; font-size: 14px;}
+
+.tableFull table td cite{ display: none;}
+
+.tableFull table td[hide="none"], .tableFull table th[hide="none"]{ display: none;}
+
+.tableFull table tr:nth-child(even) td{ background: #FAFAFA;}
+
+.tableFull table td b{font-weight: 400;}
+.tableFull table tr td:first-child, .tableFull table tr th:first-child{ padding-left: 15px;}
+
+.coversDiv{ width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between;}
+.coversDiv aside{ width: 205px; display: flex; justify-content: space-between; align-items:center;}
+.coversDiv aside select{ width: 100px;}
+.coversDiv aside label{ font-size: 12px;}
+
+@media screen and (max-width:1024px) {
+.tableFull table{ min-width: 900px;}
+}
+
+@media screen and (max-width:900px) {
+.tableFull{ width: 100%; display: flex; flex-wrap: wrap; border: 0px; }
+.tableFull table{ display: flex; }
+.tableFull thead{ display: none; }
+.tableFull tbody{ display: flex; flex-wrap: wrap;}
+.tableFull table{ min-width: initial;}
+.tableFull tbody tr{ display: flex; flex-wrap: wrap; width: 49.5%; margin-bottom: 6px; margin-right: 1%; border: 1px solid #e5e7eb; padding: 10px 0 10px 0; border-radius: 8px;}
+.tableFull tbody tr:nth-child(2n){ margin-right: 0px;}
+.tableFull tbody tr td:last-child{ border: 0px; padding-bottom: 0px;}
+.tableFull tbody tr td{ width: 100%;  display: flex; flex-wrap: wrap;background: #fff!important; border-bottom: 1px solid #e5e7eb; padding: 5px 8px; }
+.tableFull table td cite{ display: flex; width: 140px; font-style: normal;}
+.tableFull tbody tr td b{ color: #999; flex: 1;}
+.tableFull > div{ box-shadow: none!important;}
+.tableFullIn{ width: 100%; margin-top: 0px; }
+.tableFullIn > div{ width: 100%;}
+.tableFull[attr="tablesMui"] [attr-data="tablePagination"]{ width: 100%; }
+.tableFull tbody tr td[isnumber="isNumber"]{ position: absolute; right: 0px;  top: 0px; background: none!important; border: 0px;  width: 20px; display: flex;  align-items: center; justify-content: center; padding: 0px; }
+.tableFull tbody tr td[isnumber="isNumber"] cite{ display: none; }
+.tableFull tbody tr td[isnumber="isNumber"] b{ background: #f1f1f1; border-radius: 50%; color: #fff; display: flex; align-items: center; justify-content: center; border-radius: 0 8px 0 0; color: #3c3c3c;}
+.tableFull tbody tr{ position: relative;}
+}
+
+@media screen and (max-width:768px) {
+.tableFull{ padding-left: 15px; padding-right: 15px;}
+}
+
+@media screen and (max-width:680px) {
+    .tableFull tbody tr{ width: 100%; margin-right: 0px;}
+}
+
+@media screen and (max-width:530px) {
+    .tableBottom, .tableBottom section button{ font-size: 12px;}
+    .tableBottom section button{ padding-left: 5px; padding-right: 5px;}
+    .tableFull[attr="tablesMui"] [attr-data="tablePagination"]{ padding-top: 40px;}
+   
+}
+
+@media screen and (max-width:380px) {
+    .tableFull tbody tr{ width: 100%; margin-right: 0px;}
+    .tableFull table td cite{ width: 100%; }
+    .tableFull tbody tr td{ padding-bottom: 5px;}
 }

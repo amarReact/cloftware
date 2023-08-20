@@ -1,4 +1,4 @@
-import styles from "./fee.module.css";
+import styles from "../../pageComponent/schoolDash/news/news.module.css"
 import { WhiteBox } from "../../component/WhiteBox";
 import ButtonGlobal from "../../component/ButtonGlobal";
 import { ToastContainer, toast } from "react-toastify";
@@ -6,30 +6,65 @@ import { ToastContainer, toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineImport, AiOutlinePlusCircle } from "react-icons/ai";
 import InputFields from "../../component/inputFields/InputFields";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import { ErrorBox } from "../../component/MessageBox/ErrorBox";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
+import Cookies from 'js-cookie';
+import axios from "axios";
+import moment from "moment";
+import { BASE_URL } from "../../redux/constants/constants";
+import { useAuthData, useUserDetailData } from "../../utlis";
 
-const FeeSetup = () => {
+const FeeSetup = ({setAddFee}) => {
+  const  {userDataGlobal} = useUserDetailData()
+  const {authList} = useAuthData()
+  const token = Cookies.get('jwtToken');
+  const YEARID = userDataGlobal?.body?.year_id
+
   const formList = {
-    feeName: "",
     amount: "",
-    dueDate: "",
-    batchClass: "",
-    frequency: "",
-    academicYear: "2022-2023",
-    studentCategory: "",
+
   };
+
   const [formData, setFormData] = useState(formList);
   const [errors, setErrors] = useState({});
   const [dueDate, setDueDate] = useState(new Date());
+  const [selectFeeType, setSelectFeeType] = useState("");
   const [selectBatchClass, setSelectBatchClass] = useState("");
   const [selectFrequency, setSelectFrequency] = useState("");
   const [selectStudentCategory, setSelectStudentCategory] = useState("");
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [isReminder, setIsReminder] = useState(false);
+  const [batchClassName, setBatchClassName] = useState("")
+  const [getFeeCat, setGetFeeCat] = useState("")
+  const [getFeeType, setGetFeeType] = useState("")
   const navigate = useNavigate();
+  const [offset, setOffset] = useState(0);
+  const [limit, setLimit] = useState(1000);
+
+
+  const batchClassFunc = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/fees/get_fee_class_list`, 
+        {
+          // transport_id: 2,
+          year_id: YEARID,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        });
+        setBatchClassName(response?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getRemSte = selectedOptions?.map((i, v)=> i.value)
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -38,14 +73,12 @@ const FeeSetup = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const validationErrors = validate(formData);
     if (Object.keys(validationErrors).length === 0) {
-      //   loginPostFunc();
+         feeSetupPostFunc()
+        toast.success(formData, {autoClose: 2000, position: "top-center", className: 'customToast'});
     } else {
-      toast.error("Please fill in the required field!", {
-        position: "top-center",
-      });
+      // toast.error("Please fill in the required field!", {position: "top-center"})
       setErrors(validationErrors);
     }
   };
@@ -53,11 +86,9 @@ const FeeSetup = () => {
   const validate = (values) => {
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if (!values.feeName) {
-      errors.feeName = "Fee Name is required";
-    }
-    if (!values.amount) {
-      errors.amount = "Amount is required";
+  
+    if (!selectFeeType) {
+      errors.fee_name = "Fee name is required";
     }
     if (!selectBatchClass) {
       errors.selectBatchClass = "Please select an Batch/Class option.";
@@ -70,11 +101,51 @@ const FeeSetup = () => {
         "Please select an Student Category option.";
     }
 
-    if (selectedOptions.length === 0) {
+    if (!selectedOptions?.length > 0) {
       errors.reminderSettings = "Reminder Settings is required";
     }
 
     return errors;
+  };
+
+  const formatDate = (date) => {
+    return moment(date).format("YYYY-MM-DD");
+  };
+
+  const feeSetupPostFunc = async () => {
+    let remSet = getRemSte?.join(",")
+    const classList = {
+      fee_name: selectFeeType?.value,
+      amount: feeAmount?.amount,
+      due_date: formatDate(dueDate),
+      class_id: batchClassNumber?.class_id,
+      frequency: selectFrequency?.value,
+      student_category: selectStudentCategory?.value,
+      reminder_settings: remSet,
+      year_title: userDataGlobal?.body?.year_title,
+    }
+
+    axios
+      .post(`${BASE_URL}/fees/add_edit_fee_setup`, classList, {
+        headers: {
+          Authorization: `Bearer ${token}` 
+        }
+      })
+      .then((response) => {
+       
+        if(response?.status === 400){
+          toast.error(response?.data?.message);
+        } else{
+          toast.success(response?.data?.message, {autoClose: 2000, position: "top-center", className: 'customToast'});
+          let timer = setTimeout(()=>{
+            setAddFee(false)
+            clearTimeout(timer)
+          },3000)
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+      });
   };
 
   const getOptionLabel = (option) => {
@@ -100,35 +171,82 @@ const FeeSetup = () => {
     setSelectedOptions(selected);
   };
 
-  const batchClassOptions = [
-    { value: "class 1", label: "class 1" },
-    { value: "class 2", label: "class 2" },
-    { value: "class 3", label: "class 3" },
-    { value: "class 4", label: "class 4" },
-    { value: "class 5", label: "class 5" },
-    { value: "class 6", label: "class 6" },
-    { value: "class 7", label: "class 7" },
-    { value: "class 8", label: "class 8" },
-    { value: "class 9", label: "class 9" },
-    { value: "class 10", label: "class 10" },
-    { value: "class 11", label: "class 11" },
-    { value: "class 12", label: "class 12" },
-  ];
+  const batchClassOptions =
+  batchClassName &&
+  batchClassName?.body?.map((item, ind) => {
+    return {
+      label: `${item?.class_name}`,
+      value: `${item?.class_name}`,
+    };
+  });
+
+  const batchClassNumber = batchClassName?.body?.find((i,v)=> i.class_name == selectBatchClass.value );
+
+  const feeCategoriesListFunc = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/fees/fee_categories_list`, 
+        {
+          offset: 0
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        });
+        setGetFeeCat(response?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
+  const studentCategoryOptions =
+  getFeeCat &&
+  getFeeCat?.body?.map((item, ind) => {
+    return {
+      label: `${item?.fee_category_name}`,
+      value: `${item?.fee_category_name}`,
+    };
+  });
+
+
+  const feeTypeListFunc = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/fees/get_fee_type_list`, 
+        {
+          offset,
+          limit,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        });
+        setGetFeeType(response?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const feeTypeOptions =
+  getFeeType &&
+  getFeeType?.body?.map((item, ind) => {
+    return {
+      label: `${item?.fee_name}`,
+      value: `${item?.fee_name}`,
+    };
+  });
+
+  const feeAmount = getFeeType?.body?.find((i,v)=> i.fee_name == selectFeeType.value );
+
 
   const frequencyOptions = [
     { value: "One Time", label: "One Time" },
     { value: "Weekely", label: "Weekely" },
     { value: "Monthly", label: "Monthly" },
     { value: "Q.H.A", label: "Q.H.A" },
-  ];
-
-  const studentCategoryOptions = [
-    { value: "EWS", label: "EWS" },
-    { value: "RTE", label: "RTE" },
-    { value: "Staff", label: "Staff" },
-    { value: "Special", label: "Special" },
-    { value: "3 child", label: "3 child" },
-    { value: "Normal", label: "Normal" },
   ];
 
   const reminderSettingsOptions = [
@@ -138,35 +256,34 @@ const FeeSetup = () => {
     { value: 20, label: 20 },
   ];
 
+
+  useEffect(() => {
+    batchClassFunc();
+    feeCategoriesListFunc();
+    feeTypeListFunc();
+  }, [YEARID]);
+
+
+  console.log("selectedOptions", selectedOptions?.length > 0)
+
+
   return (
     <Fragment>
-      <div className={styles.feeProfileSt}>
-        <section className="headingTop">
-          <h3>Fee Setup</h3>
-          <ButtonGlobal
-            size="small"
-            className={styles.addSchool}
-            bgColor="green"
-            width="auto"
-            title="Import"
-          >
-            <AiOutlineImport />
-          </ButtonGlobal>
-        </section>
-
-        <WhiteBox>
-          <form onSubmit={handleSubmit}>
-            <ul className={styles.feeForm}>
+         <div className={styles.newsProfiForm}>
+                <form onSubmit={handleSubmit}>
+                {(studentCategoryOptions && batchClassOptions && feeTypeOptions) && 
+                <ol className={styles.twoparts}>
               <li>
-                <InputFields
-                  label="Fee Name *"
-                  id="feeName"
-                  name="feeName"
-                  placeholder="Type Text here"
-                  value={formData.feeName}
-                  onChange={handleChange}
+                  <label>Fee Name *</label>
+                  <Select
+                  value={selectFeeType}
+                  options={feeTypeOptions}
+                  onChange={(option) => setSelectFeeType(option)}
+                  maxMenuHeight={130}
+                  className="loginSelectGlb"
                 />
-                {errors?.feeName && <ErrorBox title={errors?.feeName} />}
+
+                {errors?.fee_name && <ErrorBox title={errors?.fee_name} />}
               </li>
 
               <li>
@@ -175,20 +292,21 @@ const FeeSetup = () => {
                   id="amount"
                   name="amount"
                   type="number"
-                  placeholder="Type Text here"
-                  value={formData.amount}
+                  placeholder="Type Number here"
+                  value={feeAmount?.amount && feeAmount?.amount }
                   onChange={handleChange}
+                  disabled
                 />
-                {errors?.amount && <ErrorBox title={errors?.amount} />}
+                {/* {errors?.amount && <ErrorBox title={errors?.amount} />} */}
               </li>
               <li>
                 <label>Due Date *</label>
                 <DatePicker
                   // disabled
                   dateFormat="yyyy-MM-dd"
-                  className="datePicker"
                   selected={dueDate}
                   onChange={(date) => setDueDate(date)}
+                  scrollableYearDropdown showYearDropdown showMonthDropdown yearDropdownItemNumber={60}  className="datePicker"  calendarClassName="datePicketCalander"
                 />
               </li>
               <li>
@@ -200,9 +318,7 @@ const FeeSetup = () => {
                   maxMenuHeight={130}
                   className="loginSelectGlb"
                 />
-                {errors?.selectBatchClass && (
-                  <ErrorBox title={errors?.selectBatchClass} />
-                )}
+                {errors?.selectBatchClass && <ErrorBox title={errors?.selectBatchClass} />}
               </li>
 
               <li>
@@ -218,28 +334,37 @@ const FeeSetup = () => {
                   <ErrorBox title={errors?.selectFrequency} />
                 )}
               </li>
-              <li>
+              {/* <li>
                 <InputFields
                   disabled
                   label="Current Academic Year *"
                   id="academicYear"
                   name="academicYear"
-                  placeholder="Type Text here"
+                  placeholder="Type text here"
                   value={formData.academicYear}
                   onChange={handleChange}
                 />
-              </li>
+              </li> */}
               <li>
                 <label>Reminder Settings *</label>
-                {isReminder ? (
+                {!isReminder ? (
                   <>
-                    <Select
+                   <Select 
+                    value={selectedOptions}
+                    options={reminderSettingsOptions} 
+                    isMulti  
+                    closeMenuOnSelect={false} 
+                    onChange={(option) => setSelectedOptions(option)}
+                    className="loginSelectGlb"
+                      />
+                    {/* <Select
                       options={reminderSettingsOptions}
                       isMulti
                       maxMenuHeight={130}
                       getOptionLabel={getOptionLabel}
                       getOptionValue={getOptionValue}
                       onChange={handleMultiChange}
+                      closeMenuOnSelect={false}
                       value={selectedOptions}
                       className="loginSelectGlb"
                       styles={{
@@ -248,7 +373,7 @@ const FeeSetup = () => {
                           ...menuListStyles,
                         }),
                       }}
-                    />
+                    /> */}
                     {errors?.reminderSettings && (
                       <ErrorBox title={errors?.reminderSettings} />
                     )}
@@ -278,17 +403,17 @@ const FeeSetup = () => {
                   <ErrorBox title={errors?.selectStudentCategory} />
                 )}
               </li>
-            </ul>
-            <ButtonGlobal
+              <li className={styles.fullWidth}>   <ButtonGlobal
               type="submit"
               bgColor="green"
               width="auto"
               title="Submit"
-            />
+            /></li>
+            </ol>}
+         
           </form>
           <ToastContainer />
-        </WhiteBox>
-      </div>
+          </div>
     </Fragment>
   );
 };

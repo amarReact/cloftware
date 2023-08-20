@@ -1,6 +1,16 @@
-.wbBox{ width: 100%; background: #fff; border-radius: 6px; padding: 20px 20px 20px 20px; box-shadow: 0 0 6px #ddd; margin: 5px 0 25px 0;}
+.wbBox{ width: 100%; background: #fff; border-radius: 10px; padding: 20px 20px 20px 20px; box-shadow: 0 0 0px #ddd; margin: 5px 0 25px 0; border-radius: 10px!important;}
 .wbBox hgroup{ width: 100%;}
 .wbBox.half{ width: 49%;}
 .wbBox.quarter{ width: 32%;}
 .wbBox.none{ border-radius: 0px;}
 .wbBox.paddnone{ padding: 0px;}
+/* .wbBox.topBorder{ border-top: 15px solid #e35959; position: relative; border-radius: 0px;}
+.wbBox.topBorder:before {
+    content: "";
+    position: absolute;
+    right: 0px;
+    top: -15px;
+    height: 15px;
+    width: 80%;
+    background: #F6CBCB;
+} */

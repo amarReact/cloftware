@@ -1,0 +1,24 @@
+.dfnDiv{ display: flex; align-items: center; justify-content: center; border: 1px solid #eee; height: 100px; border-radius: 8px; background-color: #fff; color: #e35959;}
+.dfnDiv svg{ font-size: 50px; color: #FFA41B; margin: 0 10px 0 0;}
+.dfnDiv span{ font-weight: 500; }
+.dfnDiv h6{ font-size: 16px; font-weight: 300;}
+.dfnDiv h6 b{ font-weight: 300;display: block;}
+
+
+/* loadingAnimation.css */
+.loading_spinnerUp{ width: 100%; display: flex; align-items: center; justify-content: center; flex: 1;}
+.loading_spinnerUp span{ margin-left:15px; font-weight: 500;}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loading_spinner {
+    border: 5px solid #fff;
+    border-top: 5px solid #3D5EE1;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite; 
+  }
+  

@@ -1,11 +1,11 @@
 .buttonGlobalMain{ width: 100%; }
-.buttonGlobalMain button{ width: 100%; height: 48px; background: #ff5315; border-radius: 30px; font-size: 16px; font-weight: 700; color: #fff; border:0px; padding: 0 20px; }
+.buttonGlobalMain button{ width: 100%; height: 48px; background: #ff5315; border-radius: 4px; font-size: 16px; font-weight: 700; color: #fff; border:0px; padding: 0 20px; }
 .half{ width: 50%;}
 .quarter{ width: 33%;}
 .auto{ width: auto; display: inline-flex;}
-.disableClass button{ background: #E5E7EB; color: rgba(107, 114, 128, 0.5); pointer-events: none; }
-.small button{ height: 32px; font-size: 12px; line-height: 16px;}
-.green button{ background: #6b58d3;}
+.disableClass button{ background: #E5E7EB; color: rgba(107, 114, 128, 0.5); pointer-events: none; opacity: 0.5; }
+.small button{ height: 32px; font-size: 14px; line-height: 16px;}
+.green button{ background: #3d5ee1; color: #fff;}
 .gray button{ background: #E5E7EB; color: #6B7280;}
 .border button{ background: none; color: rgb(63, 44, 232); border: 1px solid #3D2AE7;}
 .white button{ background: #fff; color: #3D2AE7;}

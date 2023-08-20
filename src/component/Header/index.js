@@ -1,11 +1,15 @@
 import styles from "./header.module.css";
 import { useState, useEffect, Fragment, useRef } from "react";
 import {BiChevronDown, BiChevronUp, BiLogInCircle} from "react-icons/bi"
-import {AiTwotoneSetting} from "react-icons/ai"
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import InputFields from "../inputFields/InputFields";
-import {ImProfile} from "react-icons/im"
-const Header = ({auth}) => {
+import Cookies from 'js-cookie';
+import {RxHamburgerMenu} from "react-icons/rx"
+import {MdClose} from "react-icons/md"
+import { Logo, LogoGraph } from "../Logo";
+import {IoMenu} from "react-icons/io5"
+
+const Header = ({auth, isMenu, setIsMenu}) => {
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false);
   const [menu, setMenu] = useState(false);
@@ -37,27 +41,43 @@ const Header = ({auth}) => {
   }, [outerClick]);
 
   /*******logout function start*****/ 
-  const logOut = () => { localStorage.clear(); navigate("/")};
+  const logOut = () => { Cookies.remove('jwtToken');
+  localStorage.clear(); navigate("/")};
     /*******logout function end*****/ 
 
     
   return (
     <Fragment>
-      <div className={styles.headerCntr}>
-        <form>
-          <InputFields type="search" placeholder="Search Here..." onChange={()=> console.log("dfsbf")} />
-        </form>
+      <div data-attr="headerCntr" className={styles.headerCntr}>
+        <div data-attr="logoSection" className={styles.logoSection}>
+          <hgroup>{!isMenu ? <Logo  className={styles.logoFullDivLft} />  : <LogoGraph  className={styles.logoFullDivLft} /> }  <Logo className={styles.logoFullDiv} /></hgroup>
+          <button onClick={()=> setIsMenu(!isMenu)} className={styles.hamburgerMenu}>{!isMenu ? <MdClose /> : <IoMenu />}</button> 
+        </div>
+      
+          <form>
+            <InputFields type="search" placeholder="Search Here..." onChange={()=> console.log("dfsbf")} />
+          </form>
         <aside ref={outerClick}>
-         <h6>{auth?.email_id}</h6>
-          <label onClick={()=> setIsOpen(!isOpen)}>
-            <b><img src={process.env.PUBLIC_URL + '/images/log.png'} alt="" /></b>
-            <i>{isOpen ? <BiChevronDown /> : <BiChevronUp /> }</i>
+         <button onClick={()=> setIsOpen(!isOpen)}>
+            <label>
+              <b>
+                {/* <img src={process.env.PUBLIC_URL + '/images/log.png'} alt="" /> */}
+                {auth?.email_id?.slice(0,1)}</b>
+              <i>{isOpen ? <BiChevronDown /> : <BiChevronUp /> }</i>
           </label>
-         {isOpen && <ul>
-            {/* <li><Link onClick={handleLinkClick} to="/my-profile"><ImProfile />My Profile</Link></li>
+          <h6>{auth?.email_id?.split("@")[0]}</h6>
+         </button>
+          
+         {isOpen && 
+         <div className={styles.ulList}>
+            <ul>
+          <li><Link onClick={handleLinkClick} to="/my-profile">My Profile</Link></li>
+            {/* 
             <li><Link onClick={handleLinkClick} to="/school-dashboard"><AiTwotoneSetting />School Dashboard</Link></li> */}
-            <li><button onClick={logOut}><BiLogInCircle />logOut</button></li>
-          </ul>}
+            <li><button onClick={logOut}>logOut</button></li>
+          </ul>
+         </div>
+         }
         </aside>
       </div>
     </Fragment>

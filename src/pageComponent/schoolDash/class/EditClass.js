@@ -6,16 +6,22 @@ import { ErrorBox } from "../../../component/MessageBox/ErrorBox";
 import DatePicker from "react-datepicker";
 import {useState} from "react";
 import Select from 'react-select';
-
-const EditClass =()=>{
-  const [selectedOptions, setSelectedOptions] = useState([]);
+import axios from "axios";
+import Cookies from 'js-cookie';
+import { BASE_URL } from "../../../redux/constants/constants";
+const EditClass =({details, setIsEdit})=>{
+    
+    const token = Cookies.get('jwtToken');
 
     const formList = {
-      classname: '',
+      class_name: details?.class_name,
     }
+    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [names, setNames] = useState(details?.section_details?.map((v,i)=> v.section_name));
+    const [formData, setFormData] = useState(formList);
+    const [errors, setErrors] = useState({});
 
-    const [names, setNames] = useState([]);
-
+  
     const handleKeyPress = (event) => {
       if (event.key === ' ' || event.key === 'Enter') {
         const newName = event.target.value.trim();
@@ -25,6 +31,37 @@ const EditClass =()=>{
           event.target.value = '';
         }
       }
+    };
+
+    const classPostFunc = async () => {
+      const classList = {
+        class_name: formData?.class_name,
+        year_id:details?.year_id,
+        sections:names?.join(","),
+        class_id: details?.class_id
+      }
+
+      axios
+        .post(`${BASE_URL}/class/add_edit_class`, classList, {
+          headers: {
+            Authorization: `Bearer ${token}` 
+          }
+        })
+        .then((response) => {
+         
+          if(response?.status === 400){
+            toast.error(response?.data?.message);
+          } else{
+            toast.success(response?.data?.message, {autoClose: 2000, position: "top-center", className: 'customToast'});
+            let timer = setTimeout(()=>{
+              setIsEdit(false)
+              clearTimeout(timer)
+            },3000)
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        });
     };
 
     const options = [
@@ -37,21 +74,21 @@ const EditClass =()=>{
       { value: 'G', label: 'G' },
     ];
 
-    const [formData, setFormData] = useState(formList);
-    const [errors, setErrors] = useState({});
+
 
     const validate =(formData)=>{
-        const errors = {};
-          if (!formData.classname) {
-            errors.classname = 'Class Name is required';
-          }
-          
-          if (names.length === 0) {
-            errors.sections = 'Sections is required';
-          }
+      const errors = {};
+        if (!formData.class_name) {
+          errors.class_name = 'Class Name is required';
+        }
+        
+        if (names.length === 0) {
+          errors.sections = 'Sections is required';
+        }
 
-         return errors;
-    }
+       return errors;
+  }
+ 
    
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -62,8 +99,8 @@ const EditClass =()=>{
         event.preventDefault();
         const validationErrors = validate(formData);
         if (Object.keys(validationErrors).length === 0) {
-            //  schoolPostFunc()
-            toast.success(formData, {position: "bottom-center"});
+                classPostFunc()
+            toast.success(formData, {autoClose: 2000, position: "top-center", className: 'customToast'});
         } else {
           // toast.error("Please fill in the required field!", {position: "top-center"})
           setErrors(validationErrors);
@@ -93,28 +130,37 @@ const EditClass =()=>{
         overflowY: 'auto', // enable vertical scrolling
       };
 
-      const removeSection =(id)=>{
-        names.splice(id,id+1)
-      }
+    
+      const removeSection = (id) => {
+        setNames((prevNames) => {
+          const updatedData = [...prevNames];
+          updatedData.splice(id, 1);
+          return updatedData;
+        });
+      };
 
+   
 
     return(
         <div className={styles.newsProfiForm}>
-                <form onSubmit={handleSubmit}>
+                {/* <form onSubmit={handleSubmit}> */}
                     <ol>
-                        <li><InputFields
-                        name="classname"
-                        id="classname"
-                        value={formData?.classname}
-                        label="Class Name" 
-                        placeholder="Enter title here..." 
-                        onChange={handleChange} 
-                        />
-                            {errors?.classname && <ErrorBox title={errors?.classname} />}
+                        <li>
+                        <InputFields 
+                            label="Class Name" 
+                            id="class_name" 
+                            name="class_name" 
+                            placeholder="Type text here" 
+                            value={formData.class_name}
+                            onChange={handleChange}  
+                            require
+                          />
+                                 {errors?.class_name && <ErrorBox title={errors?.class_name} />}
                         </li>
 
                         <li>
-                          <label>Sections</label>
+                          <label>Sections <em>*</em></label>
+                        <section className={styles.sectionsMerge}>
                         <input
                         className="globalInputs"
                         name="sections"
@@ -123,37 +169,24 @@ const EditClass =()=>{
                         placeholder="Enter title here..." 
                         onKeyPress={handleKeyPress}
                         />
-                        <aside>
+                       {names.length > 0 && <aside>
                             {names.map((name, index) => (
                               <ButtonGlobal title="" bgColor="border" width="auto" size="small"  key={index}>
                                 {name}
                                 <b onClick={()=> removeSection(index)}>X</b>
                               </ButtonGlobal>
                             ))}
-                          </aside>
+                          </aside>}
+                          </section>
                           {errors?.sections && <ErrorBox title={errors?.sections} />}
                         </li>
 
-                        {/* <li>
-                        <Select
-                          options={options}
-                          isMulti
-                          getOptionLabel={getOptionLabel}
-                          getOptionValue={getOptionValue}
-                          onChange={handleMultiChange}
-                          value={selectedOptions}
-                          className="loginSelectGlb" 
-                          styles={{ menuList: (provided) => ({ ...provided, ...menuListStyles }) }}
-
-                        />
-                            {errors?.sections && <ErrorBox title={errors?.sections} />}
-                        </li> */}
-                      
-                        <li><ButtonGlobal title="Save" size="small" radius="medium" width="auto" />
+                       
+                        <li><ButtonGlobal onClick={handleSubmit} title="Save" size="small" radius="medium" width="auto" />
                        
                         </li>
                     </ol>
-                </form>
+                {/* </form> */}
            
             <ToastContainer />
         </div>

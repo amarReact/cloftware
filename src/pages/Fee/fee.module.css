@@ -9,4 +9,21 @@
     text-align: left;padding: 0 0 10px 0; display: flex;
     color: #5F5E62;
 }
+.feeForm li label em{
+    font-style: normal;
+    color: red;
+    display: inline-flex;
+    margin-left: 2px;
+}
 .feeForm li:nth-child(2n){ margin-right: 0px;}
+
+.feeProfileStTop form{ padding: 0px; }
+
+.currentYearChk button{ background: none; display: flex; align-items: center; height: 48px;} 
+.currentYearChk button span {width: 20px; height: 20px; display: flex; border: 1px solid #5480ED; margin: 0 8px 0 0; border-radius: 4px; }
+.currentYearChk .currentYear span{ border-color: #5480ED; background: #5480ED;}
+
+.feeFormFull li{ width: 100%;}
+
+.feeProfileStTop{ padding-right: 0px;}
+.feeProfileStTop li{ margin-right: 0px;}
